@@ -133,8 +133,11 @@ public class CustomEntityWrapper
 			@Override
 			public void run()
 			{
-				entity.setPosition(x, y, z);
-				immune = false;
+				if(entity.getHealth() > 0)
+				{
+					entity.setPosition(x, y, z);
+					immune = false;
+				}
 			}
 		},1L);
 	}
@@ -267,7 +270,15 @@ public class CustomEntityWrapper
 	
 	public static CustomEntityWrapper spawnCustomEntity(EntityLiving entity, World world, double x, double y, double z, EntityType type)
 	{
-		return new CustomEntityWrapper(entity, world, x, y, z, type);
+		CustomEntityWrapper customEnt = new CustomEntityWrapper(entity, world, x, y, z, type);
+		CustomEntitySpawnEvent event = new CustomEntitySpawnEvent(customEnt, new Location(world, x, y, z));
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled())
+		{
+			customEnt.getEntity().setHealth(0);
+			return null;
+		}
+		return customEnt;
 	}
 	
 	public static CustomEntityWrapper spawnCustomEntity(EntityLiving entity, Location location, EntityType type)
