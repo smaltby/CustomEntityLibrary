@@ -104,7 +104,7 @@ public class CustomEntityWrapper
 					}
 				}
 			}
-		} catch (NoSuchFieldException | SecurityException  | IllegalArgumentException | IllegalAccessException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -184,7 +184,7 @@ public class CustomEntityWrapper
 			f.setAccessible(true);
 			float newSpeed = (float) (f.getFloat(entity) * modifier);
 			f.setFloat(entity, newSpeed);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
