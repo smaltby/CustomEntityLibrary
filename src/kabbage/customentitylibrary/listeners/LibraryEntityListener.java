@@ -136,8 +136,6 @@ public class LibraryEntityListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void handleWaterSpeed(CustomEntityMoveEvent event)
 	{
-		if(event.isCancelled())
-			return;
 		Entity entity = event.getEntity();
 		CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(entity);
 		Location location = entity.getLocation();

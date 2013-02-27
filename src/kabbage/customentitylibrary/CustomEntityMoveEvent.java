@@ -11,7 +11,6 @@ public class CustomEntityMoveEvent extends Event
 	private Location to;
 	private Location from;
 	private Entity ent;
-	private boolean cancel;
 	 
 	public CustomEntityMoveEvent(Entity ent, Location from, Location to)
 	{
@@ -50,15 +49,5 @@ public class CustomEntityMoveEvent extends Event
 	public Location getFrom()
 	{
 		return from;
-	}
-	
-	public void setCancelled(boolean cancel)
-	{
-		this.cancel = cancel;
-	}
-	
-	public boolean isCancelled()
-	{
-		return cancel;
 	}
 }

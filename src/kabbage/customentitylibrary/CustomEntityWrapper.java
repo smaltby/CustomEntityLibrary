@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 
 public class CustomEntityWrapper
 {
-	private static Map<EntityLiving, CustomEntityWrapper> customEntities = new HashMap<EntityLiving, CustomEntityWrapper>();
+	static Map<EntityLiving, CustomEntityWrapper> customEntities = new HashMap<EntityLiving, CustomEntityWrapper>();
 	
 	private EntityLiving entity;
 	private String name;

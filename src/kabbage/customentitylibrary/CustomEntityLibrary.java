@@ -1,11 +1,8 @@
 package kabbage.customentitylibrary;
 
-import java.util.ConcurrentModificationException;
-
 import kabbage.customentitylibrary.listeners.LibraryEntityListener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,20 +32,8 @@ public class CustomEntityLibrary
 	{
 		if(tick % 20 == 0)
 		{
-			for(World w : plugin.getServer().getWorlds())
-			{
-				try
-				{
-					for(LivingEntity ent : w.getLivingEntities())
-					{
-						if(CustomEntityWrapper.instanceOf(ent))
-						{
-							CustomEntityWrapper entity = CustomEntityWrapper.getCustomEntity(ent);
-							entity.getType().showSpecialEffects(ent);
-						}
-					}
-				} catch(ConcurrentModificationException e) {}
-			}
+			for(CustomEntityWrapper ent : CustomEntityWrapper.customEntities.values())
+				ent.getType().showSpecialEffects((LivingEntity) ent.getEntity().getBukkitEntity());
 		}
 		tick++;
 	}
