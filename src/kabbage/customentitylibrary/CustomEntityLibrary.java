@@ -25,6 +25,7 @@ public class CustomEntityLibrary
 				onTick();
 			}
 		}, 1L, 1L);
+		
 	}
 	
 	private static int tick = 0;
