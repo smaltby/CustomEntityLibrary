@@ -1,6 +1,10 @@
 package kabbage.customentitylibrary;
 
+import java.util.Stack;
+
 import kabbage.customentitylibrary.listeners.LibraryEntityListener;
+
+import net.minecraft.server.v1_4_R1.EntityLiving;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -33,8 +37,15 @@ public class CustomEntityLibrary
 	{
 		if(tick % 20 == 0)
 		{
+			Stack<EntityLiving> toRemove = new Stack<EntityLiving>();
 			for(CustomEntityWrapper ent : CustomEntityWrapper.customEntities.values())
-				ent.getType().showSpecialEffects((LivingEntity) ent.getEntity().getBukkitEntity());
+			{
+				if(!ent.getEntity().isAlive())
+					toRemove.add(ent.getEntity());
+				else
+					ent.getType().showSpecialEffects((LivingEntity) ent.getEntity().getBukkitEntity());
+			}
+			for(EntityLiving ent : toRemove) CustomEntityWrapper.customEntities.remove(ent);
 		}
 		tick++;
 	}
