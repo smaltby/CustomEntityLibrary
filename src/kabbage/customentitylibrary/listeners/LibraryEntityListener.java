@@ -138,6 +138,8 @@ public class LibraryEntityListener implements Listener
 	{
 		Entity entity = event.getEntity();
 		CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(entity);
+		if(customEnt == null)
+			return;
 		Location location = entity.getLocation();
 		if (location.getBlock().getType().equals(Material.WATER) || location.getBlock().getType().equals(Material.STATIONARY_WATER))
 		{
