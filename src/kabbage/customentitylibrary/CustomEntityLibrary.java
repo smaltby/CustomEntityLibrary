@@ -4,7 +4,7 @@ import java.util.Stack;
 
 import kabbage.customentitylibrary.listeners.LibraryEntityListener;
 
-import net.minecraft.server.v1_4_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.EntityLiving;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
