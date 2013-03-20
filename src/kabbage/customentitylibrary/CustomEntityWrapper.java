@@ -48,7 +48,7 @@ public class CustomEntityWrapper
 		try
 		{
 			float initialSpeed = 0;
-			Field speed = EntityLiving.class.getDeclaredField("bG");
+			Field speed = EntityLiving.class.getDeclaredField("bI");
 
 			speed.setAccessible(true);
 			initialSpeed = speed.getFloat(entity);
@@ -179,7 +179,7 @@ public class CustomEntityWrapper
 		Field f;
 		try
 		{
-			f = EntityLiving.class.getDeclaredField("bG");
+			f = EntityLiving.class.getDeclaredField("bI");
 
 			f.setAccessible(true);
 			float newSpeed = (float) (f.getFloat(entity) * modifier);
