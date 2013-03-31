@@ -1,4 +1,4 @@
-package kabbage.customentitylibrary;
+package main.java.com.github.customentitylibrary.entities;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -6,6 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+
+import main.java.com.github.customentitylibrary.CustomEntitySpawnEvent;
+import main.java.com.github.customentitylibrary.EntityType;
+import main.java.com.github.customentitylibrary.utils.DefaultPathfinders;
+import main.java.com.github.customentitylibrary.utils.NMS;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.ItemStack;
 import net.minecraft.server.v1_5_R2.PathfinderGoal;
@@ -20,10 +25,13 @@ import org.bukkit.craftbukkit.v1_5_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_5_R2.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+
+import main.java.com.github.customentitylibrary.CustomEntityLibrary;
 
 public class CustomEntityWrapper
 {
-	static Map<EntityLiving, CustomEntityWrapper> customEntities = new HashMap<EntityLiving, CustomEntityWrapper>();
+	private static Map<EntityLiving, CustomEntityWrapper> customEntities = new HashMap<EntityLiving, CustomEntityWrapper>();
 	
 	private EntityLiving entity;
 	private String name;
@@ -34,81 +42,19 @@ public class CustomEntityWrapper
 	
 	public boolean immune;
 	
-	@SuppressWarnings("rawtypes")
 	public CustomEntityWrapper(final EntityLiving entity, World world, final double x, final double y, final double z, EntityType type)
 	{
+		//Set basic variables
 		this.entity = entity;
 		this.type = type;
 		entity.world = ((CraftWorld) world).getHandle();
 		this.name = type.toString();
-		immune = true;
-		entity.setPosition(x, y-5, z);
-		
-		//The arduous process of changing the entities speed without disrupting the pathfinders in any other way
-		try
-		{
-			float initialSpeed = 0;
-			Field speed = EntityLiving.class.getDeclaredField("bI");
+		immune = true;					//Entity is immune to damage until its position is normal again
+		entity.setPosition(x, y-5, z);	//Will be set back to normal at the end of the constructor. Offset like this to fix an invisible entity bug
 
-			speed.setAccessible(true);
-			initialSpeed = speed.getFloat(entity);
-			speed.setFloat(entity, type.getSpeed());
-			
-			UnsafeList goalSelectorList = null;
-			UnsafeList targetSelectorList = null;
-			PathfinderGoalSelector goalSelector;
-			PathfinderGoalSelector targetSelector;
-			
-			Field gsa = PathfinderGoalSelector.class.getDeclaredField("a");
-			Field goalSelectorField = EntityLiving.class.getDeclaredField("goalSelector");
-			Field targetSelectorField = EntityLiving.class.getDeclaredField("targetSelector");
-			
-			gsa.setAccessible(true);
-			goalSelectorField.setAccessible(true);
-			targetSelectorField.setAccessible(true);
+		setupPathfinders();
 
-			goalSelector = (PathfinderGoalSelector) goalSelectorField.get(entity);
-			targetSelector = (PathfinderGoalSelector) targetSelectorField.get(entity);
-			goalSelectorList = (UnsafeList) gsa.get(goalSelector);
-			targetSelectorList = (UnsafeList) gsa.get(targetSelector);
-			
-			for(Object goalObject : goalSelectorList)
-			{
-				Field goalField = goalObject.getClass().getDeclaredField("a");
-				goalField.setAccessible(true);
-				PathfinderGoal goal = (PathfinderGoal) goalField.get(goalObject);
-				for(Field f : goal.getClass().getDeclaredFields())
-				{
-					if(f.getType().equals(Float.TYPE))
-					{
-						f.setAccessible(true);
-						float fl = f.getFloat(goal);
-						if(fl == initialSpeed)
-							f.setFloat(goal, type.getSpeed());
-					}
-				}
-			}
-			for(Object goalObject : targetSelectorList)
-			{
-				Field goalField = goalObject.getClass().getDeclaredField("a");
-				goalField.setAccessible(true);
-				PathfinderGoal goal = (PathfinderGoal) goalField.get(goalObject);
-				for(Field f : goal.getClass().getDeclaredFields())
-				{
-					if(f.getType().equals(Float.TYPE))
-					{
-						f.setAccessible(true);
-						float fl = f.getFloat(goal);
-						if(fl == initialSpeed)
-							f.setFloat(goal, type.getSpeed());
-					}
-				}
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		//Set items
 		org.bukkit.inventory.ItemStack[] items = type.getItems();
 		if(items != null)
 		{
@@ -123,6 +69,7 @@ public class CustomEntityWrapper
 			}
 		}
 
+		//Set health
 		maxHealth = type.getHealth();
 		health = type.getHealth();
 		
@@ -142,84 +89,6 @@ public class CustomEntityWrapper
 		},1L);
 	}
 	
-	public void setHealth(int health)
-	{
-		this.health = health;
-	}
-	
-	public EntityLiving getEntity()
-	{
-		return entity;
-	}
-	
-	public int getHealth()
-	{
-		return health;
-	}
-	
-	public void setMaxHealth(int maxHealth)
-	{
-		this.maxHealth = maxHealth;
-		if(health > maxHealth)
-			health = maxHealth;
-	}
-	
-	public int getMaxHealth()
-	{
-		return maxHealth;
-	}
-	
-	public void restoreHealth()
-	{
-		health = maxHealth;
-	}
-	
-	public void modifySpeed(double modifier)
-	{
-		Field f;
-		try
-		{
-			f = EntityLiving.class.getDeclaredField("bI");
-
-			f.setAccessible(true);
-			float newSpeed = (float) (f.getFloat(entity) * modifier);
-			f.setFloat(entity, newSpeed);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public EntityType getType()
-	{
-		return type;
-	}
-	
-	public void addAttack(Player p, int damage)
-    {
-    	int damagex = 0;
-    	if(damagers.get(p.getName()) != null)
-    		damagex = damagers.get(p.getName());
-    	damagers.put(p.getName(), damage + damagex);
-    }
-	
-	public Player getBestAttacker()
-    {
-    	String p = null;
-    	int damage = 0;
-    	for(Entry<String, Integer> e: damagers.entrySet())
-    	{
-    		if(e.getValue() > damage)
-    		{
-    			p = e.getKey();
-    			damage = e.getValue();
-    		}
-    	}
-    	if(p == null)
-    		return null;
-    	return Bukkit.getPlayer(p);
-    }
-	
     public Player getAssistAttacker()
     {
     	String p = null;
@@ -238,11 +107,148 @@ public class CustomEntityWrapper
     		return null;
     	return Bukkit.getPlayer(p2);
     }
+    
+	public Player getBestAttacker()
+    {
+    	String p = null;
+    	int damage = 0;
+    	for(Entry<String, Integer> e: damagers.entrySet())
+    	{
+    		if(e.getValue() > damage)
+    		{
+    			p = e.getKey();
+    			damage = e.getValue();
+    		}
+    	}
+    	if(p == null)
+    		return null;
+    	return Bukkit.getPlayer(p);
+    }
+	
+	public EntityLiving getEntity()
+	{
+		return entity;
+	}
+	
+	public int getHealth()
+	{
+		return health;
+	}
+	
+	public int getMaxHealth()
+	{
+		return maxHealth;
+	}
 
 	public String getName()
 	{
 		return name;
 	}
+	
+	public EntityType getType()
+	{
+		return type;
+	}
+	
+	public void restoreHealth()
+	{
+		health = maxHealth;
+	}
+	
+	public void setHealth(int health)
+	{
+		this.health = health;
+	}
+	
+	public void setMaxHealth(int maxHealth)
+	{
+		this.maxHealth = maxHealth;
+		if(health > maxHealth)
+			health = maxHealth;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void setupPathfinders()
+	{
+		//Get the goal/target selectors, and reset them
+		PathfinderGoalSelector goalSelector;
+		PathfinderGoalSelector targetSelector;
+		try
+		{
+			Field goalSelectorField = EntityLiving.class.getDeclaredField("goalSelector");
+			Field targetSelectorField = EntityLiving.class.getDeclaredField("targetSelector");
+
+			goalSelectorField.setAccessible(true);
+			targetSelectorField.setAccessible(true);
+			
+			goalSelector = (PathfinderGoalSelector) goalSelectorField.get(entity);
+			targetSelector = (PathfinderGoalSelector) targetSelectorField.get(entity);
+			
+			//Enable PathfinderGoalSelector's "a" field to be editable
+			Field gsa = PathfinderGoalSelector.class.getDeclaredField(NMS.PATHFINDER_LIST);
+			gsa.setAccessible(true);
+
+			//Now take the instances goals/targets and set them as new lists so they can be rewritten
+			gsa.set(goalSelector, new UnsafeList());
+			gsa.set(targetSelector, new UnsafeList());
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
+		//Take the reset goal/target selectors and readd new pathfinders from the given entity type
+		if(type.getGoalSelectors() == null)
+		{
+			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getGoalSelectors(entity, type.getSpeed()).entrySet())
+			{
+				targetSelector.a(e.getKey(), e.getValue());
+			}
+		} else
+		{
+			for(Entry<Integer, PathfinderGoal> e : type.getGoalSelectors().entrySet())
+			{
+				goalSelector.a(e.getKey(), e.getValue());
+			}
+		}
+		if(type.getTargetSelectors() == null)
+		{
+			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getTargetSelectors(entity, type.getSpeed()).entrySet())
+			{
+				targetSelector.a(e.getKey(), e.getValue());
+			}
+		} else
+		{
+			for(Entry<Integer, PathfinderGoal> e : type.getTargetSelectors().entrySet())
+			{
+				targetSelector.a(e.getKey(), e.getValue());
+			}
+		}
+	}
+	
+	public void modifySpeed(double modifier)
+	{
+		Field f;
+		try
+		{
+			f = EntityLiving.class.getDeclaredField(NMS.SPEED);
+
+			f.setAccessible(true);
+			float newSpeed = (float) (f.getFloat(entity) * modifier);
+			f.setFloat(entity, newSpeed);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void addAttack(Player p, int damage)
+    {
+    	int damagex = 0;
+    	if(damagers.get(p.getName()) != null)
+    		damagex = damagers.get(p.getName());
+    	damagers.put(p.getName(), damage + damagex);
+    }
 	
 	/**
 	 * Allows for a simpler way of checking if an Entity is an instance of a CustomEntityWrapper
@@ -254,6 +260,11 @@ public class CustomEntityWrapper
 		if(customEntities.containsKey(((CraftEntity) entity).getHandle()))
 			return true;
 		return false;
+	}
+	
+	public static Map<EntityLiving, CustomEntityWrapper> getCustomEntities()
+	{
+		return customEntities;
 	}
 	
 	/**
@@ -270,6 +281,7 @@ public class CustomEntityWrapper
 	
 	public static CustomEntityWrapper spawnCustomEntity(EntityLiving entity, World world, double x, double y, double z, EntityType type)
 	{
+		((CraftWorld) world).getHandle().addEntity(entity, SpawnReason.CUSTOM);
 		CustomEntityWrapper customEnt = new CustomEntityWrapper(entity, world, x, y, z, type);
 		CustomEntitySpawnEvent event = new CustomEntitySpawnEvent(customEnt, new Location(world, x, y, z));
 		Bukkit.getPluginManager().callEvent(event);

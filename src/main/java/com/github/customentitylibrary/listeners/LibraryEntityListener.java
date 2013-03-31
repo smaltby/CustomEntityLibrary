@@ -1,8 +1,8 @@
-package kabbage.customentitylibrary.listeners;
+package main.java.com.github.customentitylibrary.listeners;
 
-import kabbage.customentitylibrary.CustomEntityMoveEvent;
-import kabbage.customentitylibrary.CustomEntityWrapper;
-import kabbage.customentitylibrary.EntityType;
+import main.java.com.github.customentitylibrary.CustomEntityMoveEvent;
+import main.java.com.github.customentitylibrary.EntityType;
+import main.java.com.github.customentitylibrary.entities.CustomEntityWrapper;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
