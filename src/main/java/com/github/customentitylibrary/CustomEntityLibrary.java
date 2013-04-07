@@ -1,15 +1,16 @@
-package main.java.com.github.customentitylibrary;
+package com.github.customentitylibrary;
 
 import java.lang.reflect.Method;
 import java.util.Stack;
+import java.util.logging.Level;
 
-import main.java.com.github.customentitylibrary.entities.CustomEntityWrapper;
-import main.java.com.github.customentitylibrary.entities.CustomGiant;
-import main.java.com.github.customentitylibrary.entities.CustomSkeleton;
-import main.java.com.github.customentitylibrary.entities.CustomWither;
-import main.java.com.github.customentitylibrary.entities.CustomWolf;
-import main.java.com.github.customentitylibrary.entities.CustomZombie;
-import main.java.com.github.customentitylibrary.listeners.LibraryEntityListener;
+import com.github.customentitylibrary.entities.CustomEntityWrapper;
+import com.github.customentitylibrary.entities.CustomGiant;
+import com.github.customentitylibrary.entities.CustomSkeleton;
+import com.github.customentitylibrary.entities.CustomWither;
+import com.github.customentitylibrary.entities.CustomWolf;
+import com.github.customentitylibrary.entities.CustomZombie;
+import com.github.customentitylibrary.listeners.LibraryEntityListener;
 
 import net.minecraft.server.v1_5_R2.EntityGiantZombie;
 import net.minecraft.server.v1_5_R2.EntityLiving;
@@ -94,4 +95,14 @@ public class CustomEntityLibrary
         	e.printStackTrace();
         }
 	}
+    
+    public static void log(String msg)
+    {
+    	log(Level.INFO, msg);
+    }
+    
+    public static void log(Level level, String msg)
+    {
+    	plugin.getLogger().log(level, msg);
+    }
 }

@@ -1,8 +1,9 @@
-package main.java.com.github.customentitylibrary;
+package com.github.customentitylibrary.entities;
 
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.PathfinderGoal;
 
 import org.bukkit.Location;
@@ -19,25 +20,31 @@ public interface EntityType
 	
 	public int getDamage();
 	
-	public Map<Integer, PathfinderGoal> getGoalSelectors();
+	public Map<Integer, PathfinderGoal> getGoalSelectors(EntityLiving ent, EntityType type);
 	
-	public int getHealth();
+	public int getMaxHealth();
 	
 	public List<DamageCause> getImmunities();
 	
 	public ItemStack[] getItems();
 	
-	public int getRange();
+	public float getRange();
+	
+	public int getRangedDelay();
+	
+	public int getRangedType();
 	
 	public float getSpeed();
 	
-	public Map<Integer, PathfinderGoal> getTargetSelectors();
-	
-	public double getWorthModifier();
+	public Map<Integer, PathfinderGoal> getTargetSelectors(EntityLiving ent, EntityType type);
 	
 	public boolean isWither();
 	
 	public void showSpecialEffects(LivingEntity entity);
 	
 	public String toString();
+	
+	public boolean useMelee();
+	
+	public boolean useRanged();
 }

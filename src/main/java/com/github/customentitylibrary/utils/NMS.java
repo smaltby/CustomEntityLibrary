@@ -1,4 +1,4 @@
-package main.java.com.github.customentitylibrary.utils;
+package com.github.customentitylibrary.utils;
 
 public class NMS
 {

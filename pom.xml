@@ -30,7 +30,7 @@
   </dependencies>
   
   <build>
-    <defaultGoal>install</defaultGoal>
+    <defaultGoal>clean install</defaultGoal>
     <directory>${basedir}/target</directory>
     <finalName>${project.name}</finalName>
     

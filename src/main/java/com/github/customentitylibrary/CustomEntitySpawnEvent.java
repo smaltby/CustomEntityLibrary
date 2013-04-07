@@ -1,6 +1,6 @@
-package main.java.com.github.customentitylibrary;
+package com.github.customentitylibrary;
 
-import main.java.com.github.customentitylibrary.entities.CustomEntityWrapper;
+import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
 import org.bukkit.Location;
 import org.bukkit.event.Event;

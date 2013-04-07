@@ -1,4 +1,4 @@
-package main.java.com.github.customentitylibrary.entities;
+package com.github.customentitylibrary.entities;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -7,10 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 
-import main.java.com.github.customentitylibrary.CustomEntitySpawnEvent;
-import main.java.com.github.customentitylibrary.EntityType;
-import main.java.com.github.customentitylibrary.utils.DefaultPathfinders;
-import main.java.com.github.customentitylibrary.utils.NMS;
+import com.github.customentitylibrary.CustomEntitySpawnEvent;
+import com.github.customentitylibrary.utils.DefaultPathfinders;
+import com.github.customentitylibrary.utils.NMS;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.ItemStack;
 import net.minecraft.server.v1_5_R2.PathfinderGoal;
@@ -27,7 +26,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import main.java.com.github.customentitylibrary.CustomEntityLibrary;
+import com.github.customentitylibrary.CustomEntityLibrary;
 
 public class CustomEntityWrapper
 {
@@ -35,8 +34,8 @@ public class CustomEntityWrapper
 	
 	private EntityLiving entity;
 	private String name;
-	private int health;
 	private int maxHealth;
+	private int health;
 	private EntityType type;
 	Map<String, Integer> damagers = new LinkedHashMap<String, Integer>();
 	
@@ -52,6 +51,7 @@ public class CustomEntityWrapper
 		immune = true;					//Entity is immune to damage until its position is normal again
 		entity.setPosition(x, y-5, z);	//Will be set back to normal at the end of the constructor. Offset like this to fix an invisible entity bug
 
+		//Set pathfinders
 		setupPathfinders();
 
 		//Set items
@@ -70,8 +70,7 @@ public class CustomEntityWrapper
 		}
 
 		//Set health
-		maxHealth = type.getHealth();
-		health = type.getHealth();
+		health = type.getMaxHealth();
 		
 		customEntities.put(entity, this);
 		//Reload visibility
@@ -134,11 +133,6 @@ public class CustomEntityWrapper
 	{
 		return health;
 	}
-	
-	public int getMaxHealth()
-	{
-		return maxHealth;
-	}
 
 	public String getName()
 	{
@@ -160,11 +154,14 @@ public class CustomEntityWrapper
 		this.health = health;
 	}
 	
-	public void setMaxHealth(int maxHealth)
+	public void setMaxHealth(int health)
 	{
-		this.maxHealth = maxHealth;
-		if(health > maxHealth)
-			health = maxHealth;
+		maxHealth = health;
+	}
+	
+	public int getMaxHealth()
+	{
+		return maxHealth;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -198,28 +195,28 @@ public class CustomEntityWrapper
 		}
 
 		//Take the reset goal/target selectors and readd new pathfinders from the given entity type
-		if(type.getGoalSelectors() == null)
+		if(type.getGoalSelectors(entity, type) == null)
 		{
-			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getGoalSelectors(entity, type.getSpeed()).entrySet())
+			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getGoalSelectors(entity, type).entrySet())
 			{
 				targetSelector.a(e.getKey(), e.getValue());
 			}
 		} else
 		{
-			for(Entry<Integer, PathfinderGoal> e : type.getGoalSelectors().entrySet())
+			for(Entry<Integer, PathfinderGoal> e : type.getGoalSelectors(entity, type).entrySet())
 			{
 				goalSelector.a(e.getKey(), e.getValue());
 			}
 		}
-		if(type.getTargetSelectors() == null)
+		if(type.getTargetSelectors(entity, type) == null)
 		{
-			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getTargetSelectors(entity, type.getSpeed()).entrySet())
+			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getTargetSelectors(entity, type).entrySet())
 			{
 				targetSelector.a(e.getKey(), e.getValue());
 			}
 		} else
 		{
-			for(Entry<Integer, PathfinderGoal> e : type.getTargetSelectors().entrySet())
+			for(Entry<Integer, PathfinderGoal> e : type.getTargetSelectors(entity, type).entrySet())
 			{
 				targetSelector.a(e.getKey(), e.getValue());
 			}

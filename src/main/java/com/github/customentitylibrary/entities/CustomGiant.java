@@ -1,6 +1,6 @@
-package main.java.com.github.customentitylibrary.entities;
+package com.github.customentitylibrary.entities;
 
-import main.java.com.github.customentitylibrary.CustomEntityMoveEvent;
+import com.github.customentitylibrary.CustomEntityMoveEvent;
 import net.minecraft.server.v1_5_R2.EntityGiantZombie;
 
 import org.bukkit.Bukkit;

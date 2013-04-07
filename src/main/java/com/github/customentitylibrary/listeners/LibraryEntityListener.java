@@ -1,8 +1,8 @@
-package main.java.com.github.customentitylibrary.listeners;
+package com.github.customentitylibrary.listeners;
 
-import main.java.com.github.customentitylibrary.CustomEntityMoveEvent;
-import main.java.com.github.customentitylibrary.EntityType;
-import main.java.com.github.customentitylibrary.entities.CustomEntityWrapper;
+import com.github.customentitylibrary.CustomEntityMoveEvent;
+import com.github.customentitylibrary.entities.CustomEntityWrapper;
+import com.github.customentitylibrary.entities.EntityType;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

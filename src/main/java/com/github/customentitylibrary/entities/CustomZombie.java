@@ -1,11 +1,11 @@
-package main.java.com.github.customentitylibrary.entities;
+package com.github.customentitylibrary.entities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 
-import main.java.com.github.customentitylibrary.CustomEntityMoveEvent;
+import com.github.customentitylibrary.CustomEntityMoveEvent;
 import net.minecraft.server.v1_5_R2.Enchantment;
 import net.minecraft.server.v1_5_R2.EnchantmentManager;
 import net.minecraft.server.v1_5_R2.EntityArrow;

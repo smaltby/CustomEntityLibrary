@@ -1,4 +1,4 @@
-package main.java.com.github.customentitylibrary;
+package com.github.customentitylibrary;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
