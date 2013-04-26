@@ -7,16 +7,16 @@ import net.minecraft.server.v1_5_R2.Enchantment;
 import net.minecraft.server.v1_5_R2.EnchantmentManager;
 import net.minecraft.server.v1_5_R2.EntityArrow;
 import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.EntityZombie;
+import net.minecraft.server.v1_5_R2.EntityPigZombie;
 import net.minecraft.server.v1_5_R2.IRangedEntity;
 
-public class CustomZombie extends EntityZombie implements IRangedEntity
+public class CustomPigZombie extends EntityPigZombie implements IRangedEntity
 {
-	public CustomZombie(World world)
+	public CustomPigZombie(World world)
 	{
 		super(((CraftWorld) world).getHandle());
 	}
-
+	
 	@Override
 	public void a(EntityLiving arg0, float f1)
 	{

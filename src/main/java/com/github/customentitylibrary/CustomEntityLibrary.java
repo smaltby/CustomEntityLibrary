@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 import com.github.customentitylibrary.entities.CustomGiant;
+import com.github.customentitylibrary.entities.CustomPigZombie;
 import com.github.customentitylibrary.entities.CustomSkeleton;
 import com.github.customentitylibrary.entities.CustomWither;
 import com.github.customentitylibrary.entities.CustomWolf;
@@ -14,6 +15,7 @@ import com.github.customentitylibrary.listeners.LibraryEntityListener;
 
 import net.minecraft.server.v1_5_R2.EntityGiantZombie;
 import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R2.EntityPigZombie;
 import net.minecraft.server.v1_5_R2.EntitySkeleton;
 import net.minecraft.server.v1_5_R2.EntityTypes;
 import net.minecraft.server.v1_5_R2.EntityWither;
@@ -80,6 +82,8 @@ public class CustomEntityLibrary
             entityWithEggList.invoke(entityWithEggList, EntityWolf.class, "Wolf", 95, 14144467, 13545366);
             entityWithEggList.invoke(entityWithEggList, CustomSkeleton.class, "Skeleton", 51, 12698049, 4802889);
             entityWithEggList.invoke(entityWithEggList, EntitySkeleton.class, "Skeleton", 51, 12698049, 4802889);
+            entityWithEggList.invoke(entityWithEggList, CustomPigZombie.class, "PigZombie", 57, 15373203, 5009705);
+            entityWithEggList.invoke(entityWithEggList, EntityPigZombie.class, "PigZombie", 57, 15373203, 5009705);
             
             Class[] entityWithoutEggArgs = {Class.class, String.class, Integer.TYPE};
             Method entityWithoutEggList = EntityTypes.class.getDeclaredMethod("a", entityWithoutEggArgs);

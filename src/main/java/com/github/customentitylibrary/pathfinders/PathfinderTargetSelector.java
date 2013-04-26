@@ -1,6 +1,7 @@
 package com.github.customentitylibrary.pathfinders;
 
 import java.util.List;
+
 import net.minecraft.server.v1_5_R2.EntityHuman;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.EntityCreature;

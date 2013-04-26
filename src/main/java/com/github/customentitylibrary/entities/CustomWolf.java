@@ -1,74 +1,40 @@
 package com.github.customentitylibrary.entities;
 
-import com.github.customentitylibrary.CustomEntityMoveEvent;
-import net.minecraft.server.v1_5_R2.DamageSource;
-import net.minecraft.server.v1_5_R2.Entity;
-import net.minecraft.server.v1_5_R2.EntityAgeable;
-import net.minecraft.server.v1_5_R2.EntityAnimal;
-import net.minecraft.server.v1_5_R2.EntityHuman;
+import net.minecraft.server.v1_5_R2.Enchantment;
+import net.minecraft.server.v1_5_R2.EnchantmentManager;
+import net.minecraft.server.v1_5_R2.EntityArrow;
+import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.EntityWolf;
-import net.minecraft.server.v1_5_R2.ItemStack;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import net.minecraft.server.v1_5_R2.IRangedEntity;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 
-public class CustomWolf extends EntityWolf
+public class CustomWolf extends EntityWolf implements IRangedEntity
 {
 	public CustomWolf(World world)
 	{
 		super(((CraftWorld) world).getHandle());
         this.a(0.6F, 0.8F);
 	}
-
-	@Override
-    public boolean m(Entity entity) {
-        int damage = 2;
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public boolean a_(EntityHuman entityhuman)
-    {
-        return false;	//No feeding/taming this wolf
-    }
-
-    @Override
-    public boolean c(ItemStack itemstack)
-    {
-    	return false;	//This wolf needs no food
-    }
-
-    @Override
-    public boolean isAngry()
-    {
-        return true;	//Let the anger flow through you
-    }
-
-    @Override
-    public void setAngry(boolean flag)
-    {
-        //Redundant, this wolf is always angry
-    }
-
-    @Override
-    public EntityAgeable createChild(EntityAgeable entityanimal)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean mate(EntityAnimal entityanimal)
-    {
-        return false;	//The war is your mate!
-    }
 	
 	@Override
-	public void move(double d0, double d1, double d2)
+	public void a(EntityLiving arg0, float f1)
 	{
-		CustomEntityMoveEvent event = new CustomEntityMoveEvent(this.getBukkitEntity(), new Location(this.world.getWorld(), lastX, lastY, lastZ), new Location(this.world.getWorld(), locX, locY, locZ));
-		if(event != null)
-			Bukkit.getServer().getPluginManager().callEvent(event);
-		super.move(d0, d1, d2);
+		//Copied from EntitySkeleton class
+		EntityArrow entityarrow = new EntityArrow(this.world, this, arg0, 1.6F, 12.0F);
+        int i = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_DAMAGE.id, this.bG());
+        int j = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK.id, this.bG());
+
+        if (i > 0)
+            entityarrow.b(entityarrow.c() + (double) i * 0.5D + 0.5D);
+
+        if (j > 0)
+            entityarrow.a(j);
+
+        if (EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_FIRE.id, this.bG()) > 0)
+            entityarrow.setOnFire(100);
+
+        this.makeSound("random.bow", 1.0F, 1.0F / (this.aE().nextFloat() * 0.4F + 0.8F));
+        this.world.addEntity(entityarrow);
 	}
 }

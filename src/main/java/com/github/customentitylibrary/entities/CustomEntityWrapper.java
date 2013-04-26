@@ -72,6 +72,9 @@ public class CustomEntityWrapper
 		//Set health
 		health = type.getMaxHealth();
 		
+		//And then speed
+		setSpeed(type.getSpeed());
+		
 		customEntities.put(entity, this);
 		//Reload visibility
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CustomEntityLibrary.plugin, new Runnable()
@@ -223,7 +226,7 @@ public class CustomEntityWrapper
 		}
 	}
 	
-	public void modifySpeed(double modifier)
+	private void setSpeed(float speed)
 	{
 		Field f;
 		try
@@ -231,8 +234,7 @@ public class CustomEntityWrapper
 			f = EntityLiving.class.getDeclaredField(NMS.SPEED);
 
 			f.setAccessible(true);
-			float newSpeed = (float) (f.getFloat(entity) * modifier);
-			f.setFloat(entity, newSpeed);
+			f.setFloat(entity, speed);
 		} catch (Exception e)
 		{
 			e.printStackTrace();

@@ -1,11 +1,10 @@
 package com.github.customentitylibrary.listeners;
 
-import com.github.customentitylibrary.CustomEntityMoveEvent;
+import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
-import com.github.customentitylibrary.entities.EntityType;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
+import net.minecraft.server.v1_5_R2.EntityZombie;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 
 public class LibraryEntityListener implements Listener
 {
@@ -122,34 +120,21 @@ public class LibraryEntityListener implements Listener
 			if(damager instanceof Player)
 				CustomEntityWrapper.getCustomEntity(ent).addAttack((Player) damager, event.getDamage());
 		}
-		else if(ent instanceof Player)
+		else if(ent instanceof LivingEntity && damager instanceof LivingEntity)
 		{
 			if(CustomEntityWrapper.instanceOf(damager))
 			{
 				CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(damager);
-				customEnt.getType().dealEffects((Player) ent, damager.getLocation());
+				customEnt.getType().dealEffects((LivingEntity) ent, (LivingEntity) damager);
 			}
 		}
 	}
 	
-	private int i = 1;
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void handleWaterSpeed(CustomEntityMoveEvent event)
+	public void handleEntitySpawn(CustomEntitySpawnEvent event)
 	{
-		Entity entity = event.getEntity();
-		CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(entity);
-		if(customEnt == null)
-			return;
-		Location location = entity.getLocation();
-		if (location.getBlock().getType().equals(Material.WATER) || location.getBlock().getType().equals(Material.STATIONARY_WATER))
-		{
-			EntityType type = customEnt.getType();
-			double bb = type.getSpeed();
-			Vector dir = entity.getLocation().getDirection().normalize().multiply(bb/2);
-			boolean swimUp = i % 20 == 0;
-			Vector vec = new Vector(dir.getX(), (swimUp) ? .4 : dir.getY(), dir.getZ());
-			i++;
-			entity.setVelocity(vec);
-		}
+		CustomEntityWrapper entity = event.getEntity();
+		if(entity.getType().isVillager() && entity.getEntity() instanceof EntityZombie)
+			((EntityZombie) entity.getEntity()).setVillager(true);
 	}
 }

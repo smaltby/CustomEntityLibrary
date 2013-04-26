@@ -2,6 +2,7 @@ package com.github.customentitylibrary.entities;
 
 import com.github.customentitylibrary.utils.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -18,6 +19,7 @@ public class SpecialEffect
 	public static final String ENDER_SIGNAL = "endersignal";
 	public static final String SPAWNER_FLAMES = "spawnerflames";
 	public static final String SMOKE = "smoke";
+	public static final String COMMAND = "command";
 	
 	private String name;
 	private String[] args;
@@ -79,6 +81,9 @@ public class SpecialEffect
 					source.getWorld().playEffect(source, Effect.SMOKE, i);
 				}
 			}
+		} else if(name.equals(COMMAND))
+		{
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args.toString().replaceAll("[|]", "").replaceAll(",", ""));
 		}
 	}
 }

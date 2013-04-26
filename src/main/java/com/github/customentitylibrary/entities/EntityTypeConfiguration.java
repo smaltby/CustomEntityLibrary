@@ -9,15 +9,16 @@ import com.github.customentitylibrary.utils.Utils;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.PathfinderGoal;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_5_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Provides a default class for creating entity types from YAML configurations.
+ */
 public class EntityTypeConfiguration implements EntityType
 {
 	FileConfiguration config;
@@ -26,17 +27,14 @@ public class EntityTypeConfiguration implements EntityType
 	int damage;
 	int armorPierce;
 	int health;
-	double healthModifier;
 	float range;
 	float speed;
 	List<DamageCause> immunities = new ArrayList<DamageCause>();
 	ItemStack[] items = new ItemStack[5];
-	int minimumSpawnWave;
-	double spawnChance;
-	int shootDelay;
 	boolean melee;
 	boolean ranged;
 	boolean isWither;
+	boolean isVillager;
 	int rangedDelay;
 	String rangedType;
 	String skinURL;
@@ -45,24 +43,45 @@ public class EntityTypeConfiguration implements EntityType
 	
 	public EntityTypeConfiguration(FileConfiguration config)
 	{
+		/*
+		 * The nested config.get's and if config.contains blocks are there to change from one version of the config to another.
+		 * They will be removed two minor versions after they had been added
+		 */
 		this.config = config;
 		type = config.getString("Type", "Zombie");
 		name = config.getString("Name", type);
 		damage = config.getInt("Damage", 2);
-		armorPierce = config.getInt("Armor Piercing", 0);
-		health = config.getInt("Max Health", 10);
-		healthModifier = config.getDouble("HealthModifier", 1);
+		armorPierce = config.getInt("ArmorPiercing", config.getInt("Armor Piercing", 0));
+		if(config.contains("Armor Piercing"))
+		{
+			config.set("ArmorPiercing", config.get("Armor Piercing"));
+			config.set("Armor Piercing", null);
+		}
+		health = config.getInt("MaxHealth", 20);
 		range = (float) config.getDouble("Range", 16);
 		speed = (float) config.getDouble("Speed", .23);
-		minimumSpawnWave = config.getInt("MinimumSpawnWave", 1);
-		spawnChance = config.getDouble("SpawnChance", .05);
-		shootDelay = config.getInt("ShootDelay", 60);
-		isWither = config.getBoolean("Wither", false);
-		melee = config.getBoolean("Use Melee", true);
-		ranged = config.getBoolean("Use Ranged", type.equalsIgnoreCase("skeleton") && !isWither);
-		rangedType = config.getString("Ranged Attack Type", "Arrow");
-		rangedDelay = config.getInt("Ranged Attack Delay", 60);
-		skinURL = config.getString("Skin URL", (type.equalsIgnoreCase("skeleton")) ? "http://i.imgur.com/L2Zy5.png" : (type.equalsIgnoreCase("wolf")) ? "http://i.imgur.com/9Iimp.png" : "http://i.imgur.com/XJuFX.png");
+		isWither = config.getBoolean("IsWither", config.getBoolean("Wither", false));
+		if(config.contains("Wither"))
+		{
+			config.set("IsWither", config.getBoolean("Wither"));
+			config.set("Wither", null);
+		}
+		isVillager = config.getBoolean("IsVillager", false);
+		melee = config.getBoolean("UseMelee", config.getBoolean("Use Melee", true));
+		if(config.contains("Use Melee"))
+		{
+			config.set("UseMelee", config.getBoolean("Use Melee"));
+			config.set("Use Melee", null);
+		}
+		ranged = config.getBoolean("UseRanged", config.getBoolean("Use Ranged", type.equalsIgnoreCase("skeleton") && !isWither));
+		if(config.contains("Use Ranged"))
+		{
+			config.set("UseRanged", config.getBoolean("Use Ranged"));
+			config.set("Use Ranged", null);
+		}
+		rangedType = config.getString("RangedAttackType", config.getString("Ranged Attack Type", "Arrow"));
+		rangedDelay = config.getInt("ShootDelay", 60);
+		skinURL = config.getString("SkinURL", config.getString("Skin URL", null));
 		if(config.getStringList("Immunities") != null)
 		{
 			for(String damageCauseName : config.getStringList("Immunities"))
@@ -124,11 +143,6 @@ public class EntityTypeConfiguration implements EntityType
 		return health;
 	}
 	
-	public double getHealthModifier()
-	{
-		return healthModifier;
-	}
-	
 	@Override
 	public float getRange()
 	{
@@ -156,14 +170,10 @@ public class EntityTypeConfiguration implements EntityType
 		return speed;
 	}
 	
-	public String getType()
+	@Override
+	public String getPreferredType()
 	{
-		return type.toLowerCase();
-	}
-	
-	public String getName()
-	{
-		return name;
+		return type;
 	}
 
 	@Override
@@ -178,34 +188,19 @@ public class EntityTypeConfiguration implements EntityType
 		return items;
 	}
 	
-	public int getMinimumSpawnWave()
-	{
-		return minimumSpawnWave;
-	}
-	
 	public String getSkinURL()
 	{
 		return skinURL;
 	}
 	
-	public double getSpawnChance()
-	{
-		return spawnChance;
-	}
-	
-	public int getShootDelay()
-	{
-		return shootDelay;
-	}
-	
 	@Override
-	public void dealEffects(Player player, Location location)
+	public void dealEffects(LivingEntity target, LivingEntity source)
 	{
-		if(((CraftPlayer) player).getHandle().hurtTicks > 0)
+		if(((CraftLivingEntity) target).getHandle().hurtTicks > 0)
 			return;
 		for(DamageEffect effect : damageEffects)
 		{
-			effect.dealEffect(player, location);
+			effect.dealEffect(target, source);
 		}
 	}
 
@@ -252,5 +247,11 @@ public class EntityTypeConfiguration implements EntityType
 	public int getRangedDelay()
 	{
 		return rangedDelay;
+	}
+
+	@Override
+	public boolean isVillager()
+	{
+		return isVillager;
 	}
 }

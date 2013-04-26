@@ -35,8 +35,8 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
     
     public PathfinderCustomArrowAttack(IRangedEntity irangedentity, float speed, int attackSpeed, int maxRange, int minRange)
     {
+    	this(irangedentity, speed, attackSpeed, maxRange);
         this.minRange = minRange*maxRange;	//All uses of range require the squared range, so we must as well get it done here
-        
     }
     
 	@Override
@@ -86,6 +86,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 	public void update()
 	{
 		EntityLiving target = entity.getGoalTarget();
+		if(target == null) return;
         double d0 = this.entity.e(target.locX, target.boundingBox.b, target.locZ);
         boolean canSee = this.entity.aD().canSee(target);
 
