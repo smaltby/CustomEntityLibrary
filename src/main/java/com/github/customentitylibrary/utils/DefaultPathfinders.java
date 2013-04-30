@@ -29,7 +29,8 @@ public class DefaultPathfinders
 	 * </code>
 	 * <br>
 	 * All instances where a constant speed or range value is inputted are replaced by type.getSpeed() and type.getRange() respectively.<br>
-	 * All instances where a non accesible field from the entity is required use reflection to get that field.
+	 * All instances where a non accesible field from the entity is required use reflection to get that field.<br>
+	 * All instances of PathfinerGoalFloats are replaced with PathfinderSwims
 	 * @param ent	entity to get goal selectors for
 	 * @param type	type of the entity
 	 * @return		map of priorities to that priorities pathfinder
@@ -40,7 +41,7 @@ public class DefaultPathfinders
 		Map<Integer, PathfinderGoal> pathfinders = new HashMap<Integer, PathfinderGoal>();
 		if(ent instanceof EntityChicken)
 		{
-			pathfinders.put(0, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(1, new PathfinderGoalPanic((EntityCreature) ent, speed * 1.52f));
 	        pathfinders.put(2, new PathfinderGoalBreed((EntityAnimal) ent, speed));
 	        pathfinders.put(3, new PathfinderGoalTempt((EntityCreature) ent, speed, Item.SEEDS.id, false));
@@ -50,7 +51,7 @@ public class DefaultPathfinders
 	        pathfinders.put(7, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntityCow)
 		{
-			pathfinders.put(0, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(1, new PathfinderGoalPanic((EntityCreature) ent, speed * 1.52f));
 	        pathfinders.put(2, new PathfinderGoalBreed((EntityAnimal) ent, speed * .8f));
 	        pathfinders.put(3, new PathfinderGoalTempt((EntityCreature) ent, speed, Item.WHEAT.id, false));
@@ -60,7 +61,7 @@ public class DefaultPathfinders
 	        pathfinders.put(7, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntityCreeper)
 		{
-			pathfinders.put(1, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(2, new PathfinderGoalSwell((EntityCreeper) ent));
 	        pathfinders.put(3, new PathfinderGoalAvoidPlayer((EntityCreature) ent, EntityOcelot.class, 6.0F, speed, 0.3F));
 	        if(type.useRanged())
@@ -94,7 +95,7 @@ public class DefaultPathfinders
 			}
 		} else if(ent instanceof EntityOcelot)
 		{
-			pathfinders.put(1, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(2, (PathfinderGoal) getField(EntityTameableAnimal.class, ent, NMS.ANIMAL_GOALSELECTOR2));
 	        pathfinders.put(3, (PathfinderGoal) setField(EntityOcelot.class, ent, NMS.OCELOT_TEMPT, new PathfinderGoalTempt((EntityCreature) ent, 0.18F, Item.RAW_FISH.id, true)));
 	        pathfinders.put(4, new PathfinderGoalAvoidPlayer((EntityCreature) ent, EntityHuman.class, 16.0F, speed, 0.4F));
@@ -108,7 +109,7 @@ public class DefaultPathfinders
 	        pathfinders.put(12, new PathfinderGoalLookAtPlayer(ent, EntityHuman.class, 10.0F));
 		} else if(ent instanceof EntityPig)
 		{
-			pathfinders.put(0, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(1, new PathfinderGoalPanic((EntityCreature) ent, speed * 1.52f));
 	        pathfinders.put(2, (PathfinderGoal) setField(EntityTameableAnimal.class, ent, NMS.ANIMAL_GOALSELECTOR2, new PathfinderGoalPassengerCarrotStick(ent, speed * 1.36f)));
 	        pathfinders.put(3, new PathfinderGoalBreed((EntityAnimal) ent, speed));
@@ -120,7 +121,7 @@ public class DefaultPathfinders
 	        pathfinders.put(9, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntitySheep)
 		{
-	        pathfinders.put(0, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(1, new PathfinderGoalPanic((EntityCreature) ent, speed * 1.652f));
 	        pathfinders.put(2, new PathfinderGoalBreed((EntityAnimal) ent, speed));
 	        pathfinders.put(3, new PathfinderGoalTempt((EntityCreature) ent, speed * 1.087f, Item.WHEAT.id, false));
@@ -131,7 +132,7 @@ public class DefaultPathfinders
 	        pathfinders.put(8, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntitySkeleton)
 		{
-			pathfinders.put(1, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(2, new PathfinderGoalRestrictSun((EntityCreature) ent));
 	        pathfinders.put(3, new PathfinderGoalFleeSun((EntityCreature) ent, speed));
 	        if(type.useRanged())
@@ -144,7 +145,7 @@ public class DefaultPathfinders
 	        pathfinders.put(9, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntityWitch)
 		{
-			pathfinders.put(1, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 			if(type.useRanged())
 	        	pathfinders.put(2, new PathfinderCustomArrowAttack((IRangedEntity) ent, speed, type.getRangedDelay(), 16, 4));
 	        if(type.useMelee())
@@ -155,7 +156,7 @@ public class DefaultPathfinders
 	        pathfinders.put(7, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntityWither)
 		{
-			pathfinders.put(0, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 			if(type.useRanged())
 	        	pathfinders.put(1, new PathfinderCustomArrowAttack((IRangedEntity) ent, speed, type.getRangedDelay(), 20, 4));
 	        if(type.useMelee())
@@ -166,7 +167,7 @@ public class DefaultPathfinders
 	        pathfinders.put(7, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntityWolf)
 		{
-			pathfinders.put(1, new PathfinderGoalFloat(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(2, (PathfinderGoal) getField(EntityTameableAnimal.class, ent, NMS.ANIMAL_GOALSELECTOR2));
 	        pathfinders.put(3, new PathfinderGoalLeapAtTarget(ent, 0.4F));
 	        if(type.useRanged())
@@ -182,7 +183,7 @@ public class DefaultPathfinders
 	        pathfinders.put(12, new PathfinderGoalRandomLookaround(ent));
 		} else if(ent instanceof EntityZombie)	//Includes the PigZombie, a subclass of Zombie
 		{
-			pathfinders.put(0, new PathfinderSwim(ent));
+			pathfinders.put(0, new PathfinderSwim(ent, type.canDive()));
 	        pathfinders.put(1, new PathfinderGoalBreakDoor(ent));
 	        if(type.useRanged())
 	        	pathfinders.put(2, new PathfinderCustomArrowAttack((IRangedEntity) ent, speed, type.getRangedDelay(), 16, 4));

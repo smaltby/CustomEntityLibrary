@@ -10,4 +10,11 @@ public class CustomSkeleton extends EntitySkeleton
 	{
 		super(((CraftWorld) world).getHandle());
 	}
+	
+	//This method adds pathfinders to the entity we don't want
+	@Override
+	public void m()
+	{
+		
+	}
 }

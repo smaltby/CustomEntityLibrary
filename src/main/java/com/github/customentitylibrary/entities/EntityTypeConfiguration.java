@@ -35,6 +35,7 @@ public class EntityTypeConfiguration implements EntityType
 	boolean ranged;
 	boolean isWither;
 	boolean isVillager;
+	boolean canDive;
 	int rangedDelay;
 	String rangedType;
 	String skinURL;
@@ -67,6 +68,7 @@ public class EntityTypeConfiguration implements EntityType
 			config.set("Wither", null);
 		}
 		isVillager = config.getBoolean("IsVillager", false);
+		canDive = config.getBoolean("CanDive", false);
 		melee = config.getBoolean("UseMelee", config.getBoolean("Use Melee", true));
 		if(config.contains("Use Melee"))
 		{
@@ -253,5 +255,11 @@ public class EntityTypeConfiguration implements EntityType
 	public boolean isVillager()
 	{
 		return isVillager;
+	}
+
+	@Override
+	public boolean canDive()
+	{
+		return canDive;
 	}
 }

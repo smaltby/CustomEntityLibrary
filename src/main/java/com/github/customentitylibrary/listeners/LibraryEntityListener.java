@@ -3,6 +3,7 @@ package com.github.customentitylibrary.listeners;
 import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
+import net.minecraft.server.v1_5_R2.EntitySkeleton;
 import net.minecraft.server.v1_5_R2.EntityZombie;
 
 import org.bukkit.entity.Entity;
@@ -136,5 +137,7 @@ public class LibraryEntityListener implements Listener
 		CustomEntityWrapper entity = event.getEntity();
 		if(entity.getType().isVillager() && entity.getEntity() instanceof EntityZombie)
 			((EntityZombie) entity.getEntity()).setVillager(true);
+		if(entity.getType().isWither() && entity.getEntity() instanceof EntitySkeleton)
+			((EntitySkeleton) entity.getEntity()).setSkeletonType(1);
 	}
 }

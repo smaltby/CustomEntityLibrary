@@ -13,9 +13,11 @@ public class PathfinderSwim extends PathfinderBase
 {
 	EntityLiving entity;
 	int i = 0;
-	public PathfinderSwim(EntityLiving ent)
+	boolean canDive;
+	public PathfinderSwim(EntityLiving ent, boolean canDive)
 	{
 		entity = ent;
+		this.canDive = canDive;
 	}
 	
 	@Override
@@ -36,8 +38,10 @@ public class PathfinderSwim extends PathfinderBase
 			}
 			Vector dir = ent.getLocation().getDirection().normalize().multiply(speed/2);
 			double y = dir.getY();
-			if(y > -.05 && i % 20 == 0 && !entity.isInvulnerable())
+			if(y > -.05 && i % 20 == 0)
 				y = .3;
+			if(!canDive && y < 0)
+				y = 0;
 			Vector vec = new Vector(dir.getX(), y, dir.getZ());
 			i++;
 			ent.setVelocity(vec);

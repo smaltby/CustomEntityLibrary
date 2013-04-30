@@ -26,6 +26,11 @@ public interface EntityType
 	public int getArmorPiercingDamage();
 	
 	/**
+	 * Where or not this entity will follow it's target underwater
+	 */
+	public boolean canDive();
+	
+	/**
 	 * Amount of normal damage done on attack.
 	 * @return	damage
 	 */

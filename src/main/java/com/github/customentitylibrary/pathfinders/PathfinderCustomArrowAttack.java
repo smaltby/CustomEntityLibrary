@@ -14,7 +14,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 	private EntityLiving entity;	//Entity executing this pathfinder
     private IRangedEntity rangedEntity;	//Ranged entity executing this pathfinder
     //This decrements to 0 while the target is in range. When it reaches 0, the entity fires, and this goes back up to attackSpeed
-    private int rangedAttackTime = 0;
+    private int rangedAttackTime;
     private float speed;//Speed
     private int f = 0;	//Not sure
     private int attackSpeed;	//Attack speed
@@ -29,6 +29,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
         this.entity = (EntityLiving) irangedentity;
         this.speed = speed;
         this.attackSpeed = attackSpeed;
+        this.rangedAttackTime = attackSpeed;
         this.maxRange = maxRange*maxRange;	//All uses of range require the squared range, so we must as well get it done here
         this.a(3);
     }
@@ -36,7 +37,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
     public PathfinderCustomArrowAttack(IRangedEntity irangedentity, float speed, int attackSpeed, int maxRange, int minRange)
     {
     	this(irangedentity, speed, attackSpeed, maxRange);
-        this.minRange = minRange*maxRange;	//All uses of range require the squared range, so we must as well get it done here
+        this.minRange = minRange*minRange;	//All uses of range require the squared range, so we must as well get it done here
     }
     
 	@Override
