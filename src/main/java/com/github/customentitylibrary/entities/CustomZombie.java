@@ -1,14 +1,14 @@
 package com.github.customentitylibrary.entities;
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 
-import net.minecraft.server.v1_5_R2.Enchantment;
-import net.minecraft.server.v1_5_R2.EnchantmentManager;
-import net.minecraft.server.v1_5_R2.EntityArrow;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.EntityZombie;
-import net.minecraft.server.v1_5_R2.IRangedEntity;
+import net.minecraft.server.v1_5_R3.Enchantment;
+import net.minecraft.server.v1_5_R3.EnchantmentManager;
+import net.minecraft.server.v1_5_R3.EntityArrow;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityZombie;
+import net.minecraft.server.v1_5_R3.IRangedEntity;
 
 public class CustomZombie extends EntityZombie implements IRangedEntity
 {

@@ -3,8 +3,8 @@ package com.github.customentitylibrary.listeners;
 import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
-import net.minecraft.server.v1_5_R2.EntitySkeleton;
-import net.minecraft.server.v1_5_R2.EntityZombie;
+import net.minecraft.server.v1_5_R3.EntitySkeleton;
+import net.minecraft.server.v1_5_R3.EntityZombie;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

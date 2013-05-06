@@ -1,10 +1,10 @@
 package com.github.customentitylibrary.pathfinders;
 
-import net.minecraft.server.v1_5_R2.EntityCreature;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.PathEntity;
-import net.minecraft.server.v1_5_R2.RandomPositionGenerator;
-import net.minecraft.server.v1_5_R2.Vec3D;
+import net.minecraft.server.v1_5_R3.EntityCreature;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.PathEntity;
+import net.minecraft.server.v1_5_R3.RandomPositionGenerator;
+import net.minecraft.server.v1_5_R3.Vec3D;
 
 public class PathfinderMoveToTarget extends PathfinderBase
 {

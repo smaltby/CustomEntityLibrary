@@ -13,14 +13,14 @@ import com.github.customentitylibrary.entities.CustomWolf;
 import com.github.customentitylibrary.entities.CustomZombie;
 import com.github.customentitylibrary.listeners.LibraryEntityListener;
 
-import net.minecraft.server.v1_5_R2.EntityGiantZombie;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.EntityPigZombie;
-import net.minecraft.server.v1_5_R2.EntitySkeleton;
-import net.minecraft.server.v1_5_R2.EntityTypes;
-import net.minecraft.server.v1_5_R2.EntityWither;
-import net.minecraft.server.v1_5_R2.EntityWolf;
-import net.minecraft.server.v1_5_R2.EntityZombie;
+import net.minecraft.server.v1_5_R3.EntityGiantZombie;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityPigZombie;
+import net.minecraft.server.v1_5_R3.EntitySkeleton;
+import net.minecraft.server.v1_5_R3.EntityTypes;
+import net.minecraft.server.v1_5_R3.EntityWither;
+import net.minecraft.server.v1_5_R3.EntityWolf;
+import net.minecraft.server.v1_5_R3.EntityZombie;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;

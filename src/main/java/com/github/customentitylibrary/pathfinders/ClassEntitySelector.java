@@ -3,8 +3,8 @@ package com.github.customentitylibrary.pathfinders;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.server.v1_5_R2.Entity;
-import net.minecraft.server.v1_5_R2.IEntitySelector;
+import net.minecraft.server.v1_5_R3.Entity;
+import net.minecraft.server.v1_5_R3.IEntitySelector;
 
 public class ClassEntitySelector implements IEntitySelector
 {

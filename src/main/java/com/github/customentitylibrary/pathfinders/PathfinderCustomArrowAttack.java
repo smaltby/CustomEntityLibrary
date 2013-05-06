@@ -1,13 +1,13 @@
 package com.github.customentitylibrary.pathfinders;
 
-import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_5_R3.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import net.minecraft.server.v1_5_R2.Entity;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.IRangedEntity;
-import net.minecraft.server.v1_5_R2.MathHelper;
-import net.minecraft.server.v1_5_R2.Vec3D;
+import net.minecraft.server.v1_5_R3.Entity;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.IRangedEntity;
+import net.minecraft.server.v1_5_R3.MathHelper;
+import net.minecraft.server.v1_5_R3.Vec3D;
 
 public class PathfinderCustomArrowAttack extends PathfinderBase
 {
@@ -89,7 +89,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 		EntityLiving target = entity.getGoalTarget();
 		if(target == null) return;
         double d0 = this.entity.e(target.locX, target.boundingBox.b, target.locZ);
-        boolean canSee = this.entity.aD().canSee(target);
+        boolean canSee = this.entity.getEntitySenses().canSee(target);
 
         if (canSee) {
             ++this.f;

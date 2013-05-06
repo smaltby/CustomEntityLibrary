@@ -1,8 +1,8 @@
 package com.github.customentitylibrary.entities;
 
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
-import net.minecraft.server.v1_5_R2.EntitySkeleton;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import net.minecraft.server.v1_5_R3.EntitySkeleton;
 
 public class CustomSkeleton extends EntitySkeleton
 {

@@ -2,11 +2,11 @@ package com.github.customentitylibrary.pathfinders;
 
 import java.util.List;
 
-import net.minecraft.server.v1_5_R2.EntityHuman;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.EntityCreature;
-import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
-import net.minecraft.server.v1_5_R2.IEntitySelector;
+import net.minecraft.server.v1_5_R3.EntityHuman;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityCreature;
+import net.minecraft.server.v1_5_R3.EntityTameableAnimal;
+import net.minecraft.server.v1_5_R3.IEntitySelector;
 
 public class PathfinderTargetSelector extends PathfinderBase
 {

@@ -10,7 +10,7 @@ import com.github.customentitylibrary.pathfinders.PathfinderCustomArrowAttack;
 import com.github.customentitylibrary.pathfinders.PathfinderMoveToTarget;
 import com.github.customentitylibrary.pathfinders.PathfinderSwim;
 import com.github.customentitylibrary.pathfinders.PathfinderTargetSelector;
-import net.minecraft.server.v1_5_R2.*;
+import net.minecraft.server.v1_5_R3.*;
 
 public class DefaultPathfinders
 {

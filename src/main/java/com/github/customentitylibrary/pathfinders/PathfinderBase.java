@@ -1,6 +1,6 @@
 package com.github.customentitylibrary.pathfinders;
 
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
+import net.minecraft.server.v1_5_R3.PathfinderGoal;
 
 public abstract class PathfinderBase extends PathfinderGoal
 {

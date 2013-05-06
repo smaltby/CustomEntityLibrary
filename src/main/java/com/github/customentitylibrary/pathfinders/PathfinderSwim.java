@@ -7,7 +7,7 @@ import org.bukkit.util.Vector;
 
 import com.github.customentitylibrary.utils.NMS;
 
-import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityLiving;
 
 public class PathfinderSwim extends PathfinderBase
 {
