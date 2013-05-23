@@ -135,6 +135,7 @@ public class LibraryEntityListener implements Listener
 	public void handleEntitySpawn(CustomEntitySpawnEvent event)
 	{
 		CustomEntityWrapper entity = event.getEntity();
+		((LivingEntity) entity.getEntity().getBukkitEntity()).setRemoveWhenFarAway(false);
 		if(entity.getType().isVillager() && entity.getEntity() instanceof EntityZombie)
 			((EntityZombie) entity.getEntity()).setVillager(true);
 		if(entity.getType().isWither() && entity.getEntity() instanceof EntitySkeleton)

@@ -280,7 +280,12 @@ public class CustomEntityWrapper
 	
 	public static CustomEntityWrapper spawnCustomEntity(EntityLiving entity, World world, double x, double y, double z, EntityType type)
 	{
-		((CraftWorld) world).getHandle().addEntity(entity, SpawnReason.CUSTOM);
+		entity.getBukkitEntity().getLocation().getChunk().load();
+		if(!((CraftWorld) world).getHandle().addEntity(entity, SpawnReason.CUSTOM))
+		{
+			CustomEntityLibrary.log("Entity failed to spawn in an odd way. Please report this to the dev.");
+			return null;
+		}
 		CustomEntityWrapper customEnt = new CustomEntityWrapper(entity, world, x, y, z, type);
 		CustomEntitySpawnEvent event = new CustomEntitySpawnEvent(customEnt, new Location(world, x, y, z));
 		Bukkit.getPluginManager().callEvent(event);

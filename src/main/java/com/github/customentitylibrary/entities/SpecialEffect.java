@@ -28,6 +28,16 @@ public class SpecialEffect
 	{
 		this.name = name.toLowerCase();
 		this.args = args;
+		String[] newArgs = new String[5];
+		//Make it so we don't get any ArrayIndexOutOfBounds Exceptions.
+		for(int i = 0; i < 5; i++)
+		{
+			if(args.length > i)
+				newArgs[i] = args[i];
+			else
+				newArgs[i] = "";
+		}
+		args = newArgs;
 	}
 	
 	public void showEffect(LivingEntity entity)
