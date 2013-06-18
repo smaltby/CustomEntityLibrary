@@ -33,15 +33,17 @@ public class EntityTypeConfiguration implements EntityType
 	ItemStack[] items = new ItemStack[5];
 	boolean melee;
 	boolean ranged;
+    boolean isBaby;
 	boolean isWither;
 	boolean isVillager;
 	boolean canDive;
+	boolean canSeeInvisible;
 	int rangedDelay;
 	String rangedType;
 	String skinURL;
 	List<DamageEffect> damageEffects = new ArrayList<DamageEffect>();
 	List<SpecialEffect> specialEffects = new ArrayList<SpecialEffect>();
-	
+
 	public EntityTypeConfiguration(FileConfiguration config)
 	{
 		/*
@@ -68,7 +70,9 @@ public class EntityTypeConfiguration implements EntityType
 			config.set("Wither", null);
 		}
 		isVillager = config.getBoolean("IsVillager", false);
+        isBaby = config.getBoolean("IsBaby", false);
 		canDive = config.getBoolean("CanDive", false);
+		canSeeInvisible = config.getBoolean("CanSeeInvisible", false);
 		melee = config.getBoolean("UseMelee", config.getBoolean("Use Melee", true));
 		if(config.contains("Use Melee"))
 		{
@@ -126,13 +130,13 @@ public class EntityTypeConfiguration implements EntityType
 			}
 		}
 	}
-	
+
 	@Override
 	public int getDamage()
 	{
 		return damage;
 	}
-	
+
 	@Override
 	public int getArmorPiercingDamage()
 	{
@@ -144,23 +148,23 @@ public class EntityTypeConfiguration implements EntityType
 	{
 		return health;
 	}
-	
+
 	@Override
 	public float getRange()
 	{
 		return range;
 	}
-	
+
 	public boolean useMelee()
 	{
 		return melee;
 	}
-	
+
 	public boolean useRanged()
 	{
 		return ranged;
 	}
-	
+
 	public String getRangedAttackType()
 	{
 		return rangedType;
@@ -171,7 +175,7 @@ public class EntityTypeConfiguration implements EntityType
 	{
 		return speed;
 	}
-	
+
 	@Override
 	public String getPreferredType()
 	{
@@ -189,12 +193,12 @@ public class EntityTypeConfiguration implements EntityType
 	{
 		return items;
 	}
-	
+
 	public String getSkinURL()
 	{
 		return skinURL;
 	}
-	
+
 	@Override
 	public void dealEffects(LivingEntity target, LivingEntity source)
 	{
@@ -262,4 +266,16 @@ public class EntityTypeConfiguration implements EntityType
 	{
 		return canDive;
 	}
+
+	@Override
+	public boolean canSeeInvisible()
+	{
+		return canSeeInvisible;
+	}
+
+    @Override
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
 }

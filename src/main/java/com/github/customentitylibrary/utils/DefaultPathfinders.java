@@ -21,7 +21,7 @@ public class DefaultPathfinders
 	 * <br>
 	 * <code>
 	 * if(type.useRanged())<br>
-	 * &nbsp;&nbsp;&nbsp;&nbsp;pathfinders.put(4, new PathfinderCustomArrowAttack((IRangedEntity) ent, speed, 
+	 * &nbsp;&nbsp;&nbsp;&nbsp;pathfinders.put(4, new PathfinderCustomArrowAttack((IRangedEntity) ent, speed,
 	 * &nbsp;&nbsp;&nbsp;&nbsp;type.getRangedDelay(), [int], [int]));<br>
 	 * if(type.useMelee())<br>
 	 * &nbsp;&nbsp;&nbsp;&nbsp;pathfinders.put(5, new PathfinderGoalMeleeAttack(ent, speed, [bool]));<br>
@@ -198,7 +198,7 @@ public class DefaultPathfinders
 		}
 		return pathfinders;
 	}
-	
+
 	/**
 	 * Gets the default target selectors of the entity. They are identical to those of normal entities, save the following changes:<br>
 	 * No pathfinders of overlapping priority.<br>
@@ -216,44 +216,44 @@ public class DefaultPathfinders
 		Map<Integer, PathfinderGoal> pathfinders = new HashMap<Integer, PathfinderGoal>();
 		if(ent instanceof EntityChicken)
 		{
-			
+
 		} else if(ent instanceof EntityCow)
 		{
-			
+
 		} else if(ent instanceof EntityCreeper)
 		{
-	        pathfinders.put(1, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class), range));
+	        pathfinders.put(1, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class), range, type.canSeeInvisible()));
 	        pathfinders.put(2, new PathfinderGoalHurtByTarget(ent, false));
 		} else if(ent instanceof EntityIronGolem)
 		{
 	        pathfinders.put(1, new PathfinderGoalDefendVillage((EntityIronGolem) ent));
 	        pathfinders.put(2, new PathfinderGoalHurtByTarget(ent, false));
-	        pathfinders.put(3, new PathfinderTargetSelector((EntityCreature) ent, IMonster.a, range));
+	        pathfinders.put(3, new PathfinderTargetSelector((EntityCreature) ent, IMonster.a, range, type.canSeeInvisible()));
 			if(ent instanceof EntitySnowman)
 			{
-				pathfinders.put(1, new PathfinderTargetSelector((EntityCreature) ent, IMonster.a, range));
+				pathfinders.put(1, new PathfinderTargetSelector((EntityCreature) ent, IMonster.a, range, type.canSeeInvisible()));
 			}
 		} else if(ent instanceof EntityOcelot)
 		{
 	        pathfinders.put(1, new PathfinderGoalRandomTargetNonTamed((EntityTameableAnimal) ent, EntityChicken.class, range, 750, false));
 		} else if(ent instanceof EntityPig)
 		{
-			
+
 		} else if(ent instanceof EntitySheep)
 		{
-			
+
 		} else if(ent instanceof EntitySkeleton)
 		{
 	        pathfinders.put(1, new PathfinderGoalHurtByTarget(ent, false));
-	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class), range));
+	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class), range, type.canSeeInvisible()));
 		} else if(ent instanceof EntityWitch)
 		{
 	        pathfinders.put(1, new PathfinderGoalHurtByTarget(ent, false));
-	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class), range));
+	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class), range, type.canSeeInvisible()));
 		} else if(ent instanceof EntityWither)
 		{
 	        pathfinders.put(1, new PathfinderGoalHurtByTarget(ent, false));
-	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, (IEntitySelector) getField(EntityWither.class, ent, NMS.WITHER_SELECTOR), range));
+	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, (IEntitySelector) getField(EntityWither.class, ent, NMS.WITHER_SELECTOR), range, type.canSeeInvisible()));
 		} else if(ent instanceof EntityWolf)
 		{
 	        pathfinders.put(1, new PathfinderGoalOwnerHurtByTarget((EntityTameableAnimal) ent));
@@ -263,11 +263,11 @@ public class DefaultPathfinders
 		} else if(ent instanceof EntityZombie)
 		{
 	        pathfinders.put(1, new PathfinderGoalHurtByTarget(ent, true));
-	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class, EntityVillager.class), range));
+	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class, EntityVillager.class), range, type.canSeeInvisible()));
 		}
 		return pathfinders;
 	}
-	
+
 	private static Object getField(Class<? extends EntityLiving> c, EntityLiving ent, String name)
 	{
 		try
@@ -281,7 +281,7 @@ public class DefaultPathfinders
 			return null;
 		}
 	}
-	
+
 	private static Object setField(Class<? extends EntityLiving> c, EntityLiving ent, String name, Object value)
 	{
 		try

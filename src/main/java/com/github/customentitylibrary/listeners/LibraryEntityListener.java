@@ -1,15 +1,13 @@
 package com.github.customentitylibrary.listeners;
 
+import com.github.customentitylibrary.CustomEntityLibrary;
 import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
 import net.minecraft.server.v1_5_R3.EntitySkeleton;
 import net.minecraft.server.v1_5_R3.EntityZombie;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -135,10 +133,29 @@ public class LibraryEntityListener implements Listener
 	public void handleEntitySpawn(CustomEntitySpawnEvent event)
 	{
 		CustomEntityWrapper entity = event.getEntity();
+        LivingEntity bukkitEntity = (LivingEntity) entity.getEntity().getBukkitEntity();
 		((LivingEntity) entity.getEntity().getBukkitEntity()).setRemoveWhenFarAway(false);
 		if(entity.getType().isVillager() && entity.getEntity() instanceof EntityZombie)
 			((EntityZombie) entity.getEntity()).setVillager(true);
 		if(entity.getType().isWither() && entity.getEntity() instanceof EntitySkeleton)
 			((EntitySkeleton) entity.getEntity()).setSkeletonType(1);
+        if(entity.getType().isBaby())
+        {
+            //The Ageable interface is not inplemented by all entities with a SetBaby method, so reflection is the only way to do this
+            //that I'm aware of.
+            try
+            {
+                bukkitEntity.getClass().getMethod("setBaby").invoke(bukkitEntity);
+            } catch(Exception e)
+            {
+                try
+                {
+                    bukkitEntity.getClass().getMethod("setBaby", boolean.class).invoke(bukkitEntity, true);
+                } catch(Exception e2)
+                {
+
+                }
+            }
+        }
 	}
 }

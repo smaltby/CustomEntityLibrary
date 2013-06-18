@@ -15,13 +15,20 @@ public class PathfinderTargetSelector extends PathfinderBase
 	float range;
 	IEntitySelector selector;
 	int lastSwitch = 0;
-	public PathfinderTargetSelector(EntityCreature entity, IEntitySelector selector, float range)
+	boolean targetInvisibles;
+	public PathfinderTargetSelector(EntityCreature entity, IEntitySelector selector, float range, boolean targetInvisibles)
 	{
 		this.entity = entity;
 		this.range = range;
 		this.selector = selector;
+		this.targetInvisibles = targetInvisibles;
 	}
-	
+
+	public PathfinderTargetSelector(EntityCreature entity, IEntitySelector selector, float range)
+	{
+		this(entity, selector, range, false);
+	}
+
 	@Override
 	public boolean shouldExecute()
 	{
@@ -32,7 +39,7 @@ public class PathfinderTargetSelector extends PathfinderBase
 	@Override
 	public boolean continueExecuting()
 	{
-		//Only attempts to switch targets every 60 ticks, so the entity doesn't mechanically target the nearest valid entity 
+		//Only attempts to switch targets every 60 ticks, so the entity doesn't mechanically target the nearest valid entity
 		//whenever the nearest valid entity changes.
 		if(++lastSwitch == 60)
 		{
@@ -41,11 +48,11 @@ public class PathfinderTargetSelector extends PathfinderBase
 		}
 		return isValidTarget(target);
 	}
-	
+
 	@Override
 	public void startExecuting()
 	{
-		
+
 	}
 
 	@Override
@@ -60,7 +67,7 @@ public class PathfinderTargetSelector extends PathfinderBase
 	{
 		entity.setGoalTarget(target);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private EntityLiving getTarget()
 	{
@@ -81,7 +88,7 @@ public class PathfinderTargetSelector extends PathfinderBase
 		}
 		return lastEntity;
 	}
-	
+
 	private boolean isValidTarget(EntityLiving entityliving)
 	{
 		if (entityliving == null)
@@ -91,6 +98,8 @@ public class PathfinderTargetSelector extends PathfinderBase
 		if (!entityliving.isAlive())
 			return false;
 		if(this.entity.e(entityliving) > range * range)
+			return false;
+		if(entityliving.isInvisible() && !targetInvisibles)
 			return false;
 		if (((this.entity instanceof EntityTameableAnimal)) && (((EntityTameableAnimal)this.entity).isTamed()))
 		{
