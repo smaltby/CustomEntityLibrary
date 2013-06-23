@@ -1,13 +1,14 @@
 package com.github.customentitylibrary.listeners;
 
-import com.github.customentitylibrary.CustomEntityLibrary;
 import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
-import net.minecraft.server.v1_5_R3.EntitySkeleton;
-import net.minecraft.server.v1_5_R3.EntityZombie;
+import com.github.customentitylibrary.utils.NMS;
+import net.minecraft.server.v1_5_R3.*;
 
+import org.bukkit.craftbukkit.v1_5_R3.util.UnsafeList;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,6 +16,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.Field;
 
 public class LibraryEntityListener implements Listener
 {
@@ -141,7 +144,7 @@ public class LibraryEntityListener implements Listener
 			((EntitySkeleton) entity.getEntity()).setSkeletonType(1);
         if(entity.getType().isBaby())
         {
-            //The Ageable interface is not inplemented by all entities with a SetBaby method, so reflection is the only way to do this
+            //The Ageable interface is not implemented by all entities with a SetBaby method, so reflection is the only way to do this
             //that I'm aware of.
             try
             {
@@ -157,5 +160,36 @@ public class LibraryEntityListener implements Listener
                 }
             }
         }
+		if(entity.getType().ignoreInvisible())
+		{
+			UnsafeList targetSelectors;
+			try
+			{
+				Field targetSelectorField = EntityLiving.class.getDeclaredField("targetSelector");
+
+				targetSelectorField.setAccessible(true);
+
+				PathfinderGoalSelector targetSelector = (PathfinderGoalSelector) targetSelectorField.get(entity.getEntity());
+
+				Field gsa = PathfinderGoalSelector.class.getDeclaredField(NMS.PATHFINDER_LIST);
+				gsa.setAccessible(true);
+
+				targetSelectors = (UnsafeList) gsa.get(targetSelector);
+
+				for(int i = 0; i < targetSelectors.size(); i++)
+				{
+					Field goalField = targetSelectors.get(i).getClass().getDeclaredField("a");
+					goalField.setAccessible(true);
+					PathfinderGoal a = (PathfinderGoal)goalField.get(targetSelectors.get(i));
+					if(a instanceof PathfinderGoalHurtByTarget)
+					{
+						targetSelectors.remove(i);
+					}
+				}
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }

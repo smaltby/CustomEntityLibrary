@@ -105,6 +105,12 @@ public interface EntityType
 	 */
 	public Map<Integer, PathfinderGoal> getTargetSelectors(EntityLiving ent, EntityType type);
 
+	/**
+	 * Whether or not to entirely ignore invisible entities.
+	 * @return true if it is to ignore invisibles, false otherwise
+	 */
+	public boolean ignoreInvisible();
+
     /**
      * Whether or not the entity is a baby.
      */

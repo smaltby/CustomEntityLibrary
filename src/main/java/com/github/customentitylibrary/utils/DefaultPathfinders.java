@@ -5,11 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.github.customentitylibrary.entities.EntityType;
-import com.github.customentitylibrary.pathfinders.ClassEntitySelector;
-import com.github.customentitylibrary.pathfinders.PathfinderCustomArrowAttack;
-import com.github.customentitylibrary.pathfinders.PathfinderMoveToTarget;
-import com.github.customentitylibrary.pathfinders.PathfinderSwim;
-import com.github.customentitylibrary.pathfinders.PathfinderTargetSelector;
+import com.github.customentitylibrary.pathfinders.*;
 import net.minecraft.server.v1_5_R3.*;
 
 public class DefaultPathfinders
@@ -30,7 +26,7 @@ public class DefaultPathfinders
 	 * <br>
 	 * All instances where a constant speed or range value is inputted are replaced by type.getSpeed() and type.getRange() respectively.<br>
 	 * All instances where a non accesible field from the entity is required use reflection to get that field.<br>
-	 * All instances of PathfinerGoalFloats are replaced with PathfinderSwims
+	 * All instances of PathfinderGoalFloats are replaced with PathfinderSwims
 	 * @param ent	entity to get goal selectors for
 	 * @param type	type of the entity
 	 * @return		map of priorities to that priorities pathfinder
@@ -258,11 +254,11 @@ public class DefaultPathfinders
 		{
 	        pathfinders.put(1, new PathfinderGoalOwnerHurtByTarget((EntityTameableAnimal) ent));
 	        pathfinders.put(2, new PathfinderGoalOwnerHurtTarget((EntityTameableAnimal) ent));
-	        pathfinders.put(3, new PathfinderGoalHurtByTarget(ent, true));
+	        pathfinders.put(3, new PathfinderGoalHurtByTarget(ent, false));
 	        pathfinders.put(4, new PathfinderGoalRandomTargetNonTamed((EntityTameableAnimal) ent, EntitySheep.class, range, 200, false));
 		} else if(ent instanceof EntityZombie)
 		{
-	        pathfinders.put(1, new PathfinderGoalHurtByTarget(ent, true));
+	        pathfinders.put(1, new PathfinderGoalHurtByTarget(ent, false));
 	        pathfinders.put(2, new PathfinderTargetSelector((EntityCreature) ent, new ClassEntitySelector(EntityHuman.class, EntityVillager.class), range, type.canSeeInvisible()));
 		}
 		return pathfinders;

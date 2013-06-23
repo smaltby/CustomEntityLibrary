@@ -31,7 +31,7 @@ public class CustomEntityLibrary
 {	
 	public static JavaPlugin plugin;
 	
-	public static void load(JavaPlugin plugin)
+	public static void enable(JavaPlugin plugin)
 	{
 		CustomEntityLibrary.plugin = plugin;
 		loadCustomEntities();

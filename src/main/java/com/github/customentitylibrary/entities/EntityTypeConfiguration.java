@@ -31,6 +31,7 @@ public class EntityTypeConfiguration implements EntityType
 	float speed;
 	List<DamageCause> immunities = new ArrayList<DamageCause>();
 	ItemStack[] items = new ItemStack[5];
+
 	boolean melee;
 	boolean ranged;
     boolean isBaby;
@@ -38,6 +39,7 @@ public class EntityTypeConfiguration implements EntityType
 	boolean isVillager;
 	boolean canDive;
 	boolean canSeeInvisible;
+	boolean ignoreInvisible;
 	int rangedDelay;
 	String rangedType;
 	String skinURL;
@@ -48,7 +50,7 @@ public class EntityTypeConfiguration implements EntityType
 	{
 		/*
 		 * The nested config.get's and if config.contains blocks are there to change from one version of the config to another.
-		 * They will be removed two minor versions after they had been added
+		 * They will be removed eventually
 		 */
 		this.config = config;
 		type = config.getString("Type", "Zombie");
@@ -72,7 +74,8 @@ public class EntityTypeConfiguration implements EntityType
 		isVillager = config.getBoolean("IsVillager", false);
         isBaby = config.getBoolean("IsBaby", false);
 		canDive = config.getBoolean("CanDive", false);
-		canSeeInvisible = config.getBoolean("CanSeeInvisible", false);
+		ignoreInvisible = config.getBoolean("IgnoreInvisible", false);
+		canSeeInvisible = config.getBoolean("CanSeeInvisible", false) && !ignoreInvisible;
 		melee = config.getBoolean("UseMelee", config.getBoolean("Use Melee", true));
 		if(config.contains("Use Melee"))
 		{
@@ -278,4 +281,10 @@ public class EntityTypeConfiguration implements EntityType
     {
         return isBaby;
     }
+
+	@Override
+	public boolean ignoreInvisible()
+	{
+		return ignoreInvisible;
+	}
 }
