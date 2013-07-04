@@ -1,10 +1,6 @@
 package com.github.customentitylibrary.pathfinders;
 
-import net.minecraft.server.v1_5_R3.EntityCreature;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.PathEntity;
-import net.minecraft.server.v1_5_R3.RandomPositionGenerator;
-import net.minecraft.server.v1_5_R3.Vec3D;
+import net.minecraft.server.v1_6_R1.*;
 
 public class PathfinderMoveToTarget extends PathfinderBase
 {
@@ -50,7 +46,7 @@ public class PathfinderMoveToTarget extends PathfinderBase
 			return shouldExecute();
 		}
 		//getNavigation.f() checks to see if there is no path, in which case, return false
-		return !(entity.getNavigation().f() || entity.getGoalTarget() == null); 
+		return !(entity.getNavigation().g() || entity.getGoalTarget() == null);
 	}
 
 	@Override

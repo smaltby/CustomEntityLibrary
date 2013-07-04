@@ -2,21 +2,17 @@ package com.github.customentitylibrary.pathfinders;
 
 import java.util.List;
 
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.EntityCreature;
-import net.minecraft.server.v1_5_R3.EntityTameableAnimal;
-import net.minecraft.server.v1_5_R3.IEntitySelector;
+import net.minecraft.server.v1_6_R1.*;
 
 public class PathfinderTargetSelector extends PathfinderBase
 {
-	EntityCreature entity;
+	EntityInsentient entity;
 	EntityLiving target;
 	float range;
 	IEntitySelector selector;
 	int lastSwitch = 0;
 	boolean targetInvisibles;
-	public PathfinderTargetSelector(EntityCreature entity, IEntitySelector selector, float range, boolean targetInvisibles)
+	public PathfinderTargetSelector(EntityInsentient entity, IEntitySelector selector, float range, boolean targetInvisibles)
 	{
 		this.entity = entity;
 		this.range = range;
@@ -24,7 +20,7 @@ public class PathfinderTargetSelector extends PathfinderBase
 		this.targetInvisibles = targetInvisibles;
 	}
 
-	public PathfinderTargetSelector(EntityCreature entity, IEntitySelector selector, float range)
+	public PathfinderTargetSelector(EntityInsentient entity, IEntitySelector selector, float range)
 	{
 		this(entity, selector, range, false);
 	}

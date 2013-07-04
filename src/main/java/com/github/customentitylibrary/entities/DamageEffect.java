@@ -49,26 +49,33 @@ public class DamageEffect
 			Utils.knockBack(target, sourceLoc, Utils.parseDouble(args[0], 1.0), Utils.parseDouble(args[1], 1.0));
 		} else if(name.equals(FORCE_EQUIP))
 		{
-			ItemStack item = new ItemStack(Material.getMaterial(args[0]));
-			if(item != null)
+			ItemStack item = new ItemStack(Material.getMaterial(args[0].toUpperCase().replaceAll(" ","_")));
+			switch(Utils.parseInt(args[1], 0))
 			{
-				switch(Utils.parseInt(args[1], 0))
-				{
-				case 0:
-					target.getEquipment().setBoots(item);
-					break;
-				case 1:
-					target.getEquipment().setLeggings(item);
-					break;
-				case 2:
-					target.getEquipment().setChestplate(item);
-					break;
-				case 3:
-					target.getEquipment().setHelmet(item);
-					break;
-				default:
-					target.getEquipment().setBoots(item);
-				}
+			case 0:
+				if(target instanceof Player && target.getEquipment().getBoots() != null)
+					((Player)target).getInventory().addItem(target.getEquipment().getBoots());
+				target.getEquipment().setBoots(item);
+				break;
+			case 1:
+				if(target instanceof Player && target.getEquipment().getLeggings() != null)
+					((Player)target).getInventory().addItem(target.getEquipment().getLeggings());
+				target.getEquipment().setLeggings(item);
+				break;
+			case 2:
+				if(target instanceof Player && target.getEquipment().getChestplate() != null)
+					((Player)target).getInventory().addItem(target.getEquipment().getChestplate());
+				target.getEquipment().setChestplate(item);
+				break;
+			case 3:
+				if(target instanceof Player && target.getEquipment().getHelmet() != null)
+					((Player)target).getInventory().addItem(target.getEquipment().getHelmet());
+				target.getEquipment().setHelmet(item);
+				break;
+			default:
+				if(target instanceof Player && target.getEquipment().getBoots() != null)
+					((Player)target).getInventory().addItem(target.getEquipment().getBoots());
+				target.getEquipment().setBoots(item);
 			}
 		} else if(name.equals(TELEPORT))
 		{

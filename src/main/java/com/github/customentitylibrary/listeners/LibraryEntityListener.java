@@ -1,12 +1,14 @@
 package com.github.customentitylibrary.listeners;
 
+import com.github.customentitylibrary.CustomEntityLibrary;
 import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
 import com.github.customentitylibrary.utils.NMS;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 
-import org.bukkit.craftbukkit.v1_5_R3.util.UnsafeList;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_6_R1.util.UnsafeList;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -16,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
 
@@ -30,7 +33,7 @@ public class LibraryEntityListener implements Listener
 		pm.registerEvents(this, plugin);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void cancelIfImmune(EntityDamageEvent event)
 	{
 		if(event.isCancelled())
@@ -39,11 +42,8 @@ public class LibraryEntityListener implements Listener
 		if(CustomEntityWrapper.instanceOf(ent))
 		{
 			CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(ent);
-			if(customEnt.immune || customEnt.getType().getImmunities().contains(event.getCause()))
-			{
+			if(customEnt.isImmune() || customEnt.getType().getImmunities().contains(event.getCause()))
 				event.setCancelled(true);
-				return;
-			}
 		}
 	}
 	
@@ -59,13 +59,13 @@ public class LibraryEntityListener implements Listener
 			CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(ent);
 			//Subtract healthX, set the damage as 1, and set the ents normal health back up to 20 unless healthX is below 0
 			//in which case kill the ent
-			int health = customEnt.getHealth();
+			double health = customEnt.getHealth();
 			customEnt.setHealth(health - event.getDamage());
 			if(customEnt.getHealth() <= 0)
-				event.setDamage(2000);
+				event.setDamage(2000d);
 			else
 			{
-				event.setDamage(1);
+				event.setDamage(1d);
 				double percentHealth = (double) customEnt.getHealth() / customEnt.getMaxHealth();
 				LivingEntity livingEntity = (LivingEntity) ent;
 				livingEntity.setHealth((int) Math.ceil(livingEntity.getMaxHealth() * percentHealth));
@@ -83,7 +83,7 @@ public class LibraryEntityListener implements Listener
 		{
 			CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(damager);
 			LivingEntity ent = (LivingEntity) event.getEntity();
-			int health = ent.getHealth() - customEnt.getType().getArmorPiercingDamage();
+			double health = ent.getHealth() - customEnt.getType().getArmorPiercingDamage();
 			if(health < 0)
 				health = 0;
 			ent.setHealth(health);
@@ -92,11 +92,11 @@ public class LibraryEntityListener implements Listener
 		else if(damager instanceof Projectile)
 		{
 			Projectile proj = (Projectile) damager;
-			if(CustomEntityWrapper.instanceOf(proj.getShooter()))
+			if(proj.getShooter() != null && CustomEntityWrapper.instanceOf(proj.getShooter()))
 			{
 				CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(proj.getShooter());
 				LivingEntity ent = (LivingEntity) event.getEntity();
-				int health = ent.getHealth() - customEnt.getType().getArmorPiercingDamage();
+				double health = ent.getHealth() - customEnt.getType().getArmorPiercingDamage();
 				if(health < 0)
 					health = 0;
 				ent.setHealth(health);
@@ -156,7 +156,7 @@ public class LibraryEntityListener implements Listener
                     bukkitEntity.getClass().getMethod("setBaby", boolean.class).invoke(bukkitEntity, true);
                 } catch(Exception e2)
                 {
-
+					e2.printStackTrace();
                 }
             }
         }
@@ -165,7 +165,7 @@ public class LibraryEntityListener implements Listener
 			UnsafeList targetSelectors;
 			try
 			{
-				Field targetSelectorField = EntityLiving.class.getDeclaredField("targetSelector");
+				Field targetSelectorField = EntityInsentient.class.getDeclaredField("targetSelector");
 
 				targetSelectorField.setAccessible(true);
 
@@ -189,6 +189,30 @@ public class LibraryEntityListener implements Listener
 			} catch (Exception e)
 			{
 				e.printStackTrace();
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void reduceKnockback(final EntityDamageByEntityEvent event)
+	{
+		if(event.isCancelled())
+			return;
+		final Entity entity = event.getEntity();
+		if(CustomEntityWrapper.instanceOf(entity))
+		{
+			final CustomEntityWrapper customEntity = CustomEntityWrapper.getCustomEntity(entity);
+			final Vector prevVelocity = entity.getVelocity();
+			if(customEntity.getType().disableKnockbackToSelf())
+			{
+				Bukkit.getScheduler().scheduleSyncDelayedTask(CustomEntityLibrary.plugin, new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						entity.setVelocity(prevVelocity);
+					}
+				},1L);
 			}
 		}
 	}

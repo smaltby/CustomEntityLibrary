@@ -1,9 +1,7 @@
 package com.github.customentitylibrary.utils;
 
-import net.minecraft.server.v1_5_R3.MathHelper;
-
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
@@ -60,42 +58,27 @@ public class Utils
 	}
 	
 	//I suspect the verticalModifier isn't working...
-		public static void knockBack(LivingEntity entity, Location source, double horizontalModifier, double verticalModifier)
-		{
-			if(((CraftLivingEntity) entity).getHandle().hurtTicks < 0)
-				return;
-			Location playerLocation = entity.getLocation();
-			double xPower = source.getX() - playerLocation.getX();
-			double yPower = 0.4D;
-			double zPower;
-			
-	        for (zPower = source.getZ() - playerLocation.getZ(); xPower * xPower + zPower * zPower < 1.0E-4D; zPower = (Math.random() - Math.random()) * 0.01D)
-	        {
-	        	xPower = (Math.random() - Math.random()) * 0.01D;
-	        }
-			
-			if (yPower > 0.4000000059604645)
-	        {
-				yPower = 0.4000000059604645;
-	        }
-	        
-			Vector v = entity.getVelocity();
-			double motionX = v.getX();
-			double motionY = v.getY();
-			double motionZ = v.getZ();
-			double horizontal = MathHelper.sqrt(xPower * xPower + zPower * zPower);
-			double vertical = yPower;
-			motionX /= 2.0D;
-			motionY /= 2.0D;
-			motionZ /= 2.0D;
-			motionX -= xPower / (double)horizontal * (double)vertical;
-			motionY += (double)vertical;
-			motionZ -= zPower / (double)horizontal * (double)vertical;
-			
-			motionX *= horizontalModifier;
-			motionY *= verticalModifier;
-			motionZ *= horizontalModifier;
+	public static Vector knockBack(LivingEntity entity, Location source, double horizontalModifier, double verticalModifier)
+	{
+		if(((CraftLivingEntity) entity).getHandle().hurtTicks > 0)
+			return new Vector(0,0,0);
+		Location target = entity.getLocation();
+		double xPower = target.getX() - source.getX();
+		double yPower = 1D;
+		double zPower = target.getZ() - source.getZ();
 
-			entity.setVelocity(new Vector(motionX, motionY, motionZ));
-		}
+		double magnitude = Math.sqrt(xPower * xPower + zPower * zPower);
+		xPower /= magnitude;
+		zPower /= magnitude;
+		xPower /= 2;
+		zPower /= 2;
+
+		xPower *= horizontalModifier;
+		yPower *= verticalModifier;
+		zPower *= horizontalModifier;
+
+		Vector knockback = new Vector(xPower, yPower, zPower);
+		entity.setVelocity(knockback);
+		return knockback;
+	}
 }

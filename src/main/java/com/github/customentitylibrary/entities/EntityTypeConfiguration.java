@@ -2,16 +2,15 @@ package com.github.customentitylibrary.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.github.customentitylibrary.utils.Utils;
 
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.PathfinderGoal;
+import net.minecraft.server.v1_6_R1.EntityInsentient;
+import net.minecraft.server.v1_6_R1.PathfinderGoal;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +28,7 @@ public class EntityTypeConfiguration implements EntityType
 	int health;
 	float range;
 	float speed;
+	boolean disableKnockback;
 	List<DamageCause> immunities = new ArrayList<DamageCause>();
 	ItemStack[] items = new ItemStack[5];
 
@@ -64,7 +64,10 @@ public class EntityTypeConfiguration implements EntityType
 		}
 		health = config.getInt("MaxHealth", 20);
 		range = (float) config.getDouble("Range", 16);
-		speed = (float) config.getDouble("Speed", .23);
+		speed = (float) config.getDouble("Speed", 1);
+		if(type.equalsIgnoreCase("zombiepigman"))
+			speed /= 4;
+		disableKnockback = config.getBoolean("DisableKnockbackToSelf", false);
 		isWither = config.getBoolean("IsWither", config.getBoolean("Wither", false));
 		if(config.contains("Wither"))
 		{
@@ -76,17 +79,17 @@ public class EntityTypeConfiguration implements EntityType
 		canDive = config.getBoolean("CanDive", false);
 		ignoreInvisible = config.getBoolean("IgnoreInvisible", false);
 		canSeeInvisible = config.getBoolean("CanSeeInvisible", false) && !ignoreInvisible;
-		melee = config.getBoolean("UseMelee", config.getBoolean("Use Melee", true));
-		if(config.contains("Use Melee"))
-		{
-			config.set("UseMelee", config.getBoolean("Use Melee"));
-			config.set("Use Melee", null);
-		}
 		ranged = config.getBoolean("UseRanged", config.getBoolean("Use Ranged", type.equalsIgnoreCase("skeleton") && !isWither));
 		if(config.contains("Use Ranged"))
 		{
 			config.set("UseRanged", config.getBoolean("Use Ranged"));
 			config.set("Use Ranged", null);
+		}
+		melee = config.getBoolean("UseMelee", config.getBoolean("Use Melee", !ranged));
+		if(config.contains("Use Melee"))
+		{
+			config.set("UseMelee", config.getBoolean("Use Melee"));
+			config.set("Use Melee", null);
 		}
 		rangedType = config.getString("RangedAttackType", config.getString("Ranged Attack Type", "Arrow"));
 		rangedDelay = config.getInt("ShootDelay", 60);
@@ -107,6 +110,8 @@ public class EntityTypeConfiguration implements EntityType
 			for(String itemName : config.getStringList("Armor"))
 			{
 				Material material = Material.getMaterial(itemName.toUpperCase().replaceAll(" ", "_"));
+				if(material == null)
+					material = Material.getMaterial(Utils.parseInt(itemName, -1));
 				if(material != null)
 					items[index] = new ItemStack(material.getId());
 				index++;
@@ -135,19 +140,19 @@ public class EntityTypeConfiguration implements EntityType
 	}
 
 	@Override
-	public int getDamage()
+	public double getDamage()
 	{
 		return damage;
 	}
 
 	@Override
-	public int getArmorPiercingDamage()
+	public double getArmorPiercingDamage()
 	{
 		return armorPierce;
 	}
 
 	@Override
-	public int getMaxHealth()
+	public double getMaxHealth()
 	{
 		return health;
 	}
@@ -229,13 +234,19 @@ public class EntityTypeConfiguration implements EntityType
 	}
 
 	@Override
-	public Map<Integer, PathfinderGoal> getGoalSelectors(EntityLiving ent, EntityType type)
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public List<PathfinderGoal> getGoalSelectors(EntityInsentient ent)
 	{
 		return null;
 	}
 
 	@Override
-	public Map<Integer, PathfinderGoal> getTargetSelectors(EntityLiving ent, EntityType type)
+	public List<PathfinderGoal> getTargetSelectors(EntityInsentient ent)
 	{
 		return null;
 	}
@@ -286,5 +297,11 @@ public class EntityTypeConfiguration implements EntityType
 	public boolean ignoreInvisible()
 	{
 		return ignoreInvisible;
+	}
+
+	@Override
+	public boolean disableKnockbackToSelf()
+	{
+		return disableKnockback;
 	}
 }

@@ -1,10 +1,9 @@
 package com.github.customentitylibrary.entities;
 
 import java.util.List;
-import java.util.Map;
 
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.PathfinderGoal;
+import net.minecraft.server.v1_6_R1.EntityInsentient;
+import net.minecraft.server.v1_6_R1.PathfinderGoal;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -23,7 +22,7 @@ public interface EntityType
 	 * Amount of damage done on attack that completely ignores armor.
 	 * @return	damage
 	 */
-	public int getArmorPiercingDamage();
+	public double getArmorPiercingDamage();
 
 	/**
 	 * Where or not this entity will follow it's target underwater
@@ -36,24 +35,29 @@ public interface EntityType
 	public boolean canSeeInvisible();
 
 	/**
+	 * Whether or not to disable knockback dealt to this entity.
+	 * @return	knockback disabled
+	 */
+	public boolean disableKnockbackToSelf();
+
+	/**
 	 * Amount of normal damage done on attack.
 	 * @return	damage
 	 */
-	public int getDamage();
+	public double getDamage();
 
 	/**
-	 * Get a mapping of priorities to goal pathfinders.
+	 * Get a list of goal pathfinders.
 	 * @param ent	instance of entity getting the pathfinders
-	 * @param type	type of entity getting the pathfinders
-	 * @return		map of priorities to pathfinders
+	 * @return		list of pathfinders
 	 */
-	public Map<Integer, PathfinderGoal> getGoalSelectors(EntityLiving ent, EntityType type);
+	public List<PathfinderGoal> getGoalSelectors(EntityInsentient ent);
 
 	/**
 	 * Get the maximum health of the entity. May be adjusted after the entity has spawned.
 	 * @return	max health
 	 */
-	public int getMaxHealth();
+	public double getMaxHealth();
 
 	/**
 	 * Get a list of damage causes that this entity is immune to.
@@ -98,12 +102,11 @@ public interface EntityType
 	public float getSpeed();
 
 	/**
-	 * Get a mapping of priorities to target pathfinders.
+	 * Get a list of target pathfinders.
 	 * @param ent	instance of entity getting the pathfinders
-	 * @param type	type of entity getting the pathfinders
-	 * @return		map of priorities to pathfinders
+	 * @return		list of pathfinders
 	 */
-	public Map<Integer, PathfinderGoal> getTargetSelectors(EntityLiving ent, EntityType type);
+	public List<PathfinderGoal> getTargetSelectors(EntityInsentient ent);
 
 	/**
 	 * Whether or not to entirely ignore invisible entities.
@@ -139,7 +142,7 @@ public interface EntityType
 	 * Returns the name of this entity type.
 	 * @return	name
 	 */
-	public String toString();
+	public String getName();
 
 	/**
 	 * Whether or not to use melee. Mainly used for determining the default pathfinders, if they are not specified.

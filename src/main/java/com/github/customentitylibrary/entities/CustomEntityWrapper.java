@@ -3,25 +3,22 @@ package com.github.customentitylibrary.entities;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 
 import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.utils.DefaultPathfinders;
 import com.github.customentitylibrary.utils.NMS;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.ItemStack;
-import net.minecraft.server.v1_5_R3.PathfinderGoal;
-import net.minecraft.server.v1_5_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_6_R1.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_5_R3.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R1.util.UnsafeList;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -30,35 +27,34 @@ import com.github.customentitylibrary.CustomEntityLibrary;
 
 public class CustomEntityWrapper
 {
-	private static Map<EntityLiving, CustomEntityWrapper> customEntities = new HashMap<EntityLiving, CustomEntityWrapper>();
+	private static Map<EntityInsentient, CustomEntityWrapper> customEntities = new HashMap<EntityInsentient, CustomEntityWrapper>();
 	
-	private EntityLiving entity;
+	private EntityInsentient entity;
 	private String name;
-	private int maxHealth;
-	private int health;
+	private double maxHealth;
+	private double health;
 	private EntityType type;
-	Map<String, Integer> damagers = new LinkedHashMap<String, Integer>();
+	Map<String, Double> damagers = new LinkedHashMap<String, Double>();
+	List<PathfinderGoal> goalSelectors;
+	List<PathfinderGoal> targetSelectors;
 	
-	public boolean immune;
+	private boolean immune;
 	
-	public CustomEntityWrapper(final EntityLiving entity, World world, final double x, final double y, final double z, EntityType type)
+	public CustomEntityWrapper(final EntityInsentient entity, final World world, final double x, final double y, final double z, EntityType type)
 	{
 		//Set basic variables
 		this.entity = entity;
 		this.type = type;
 		entity.world = ((CraftWorld) world).getHandle();
-		this.name = type.toString();
+		this.name = type.getName();
 		immune = true;					//Entity is immune to damage until its position is normal again
-		entity.setPosition(x, y-5, z);	//Will be set back to normal at the end of the constructor. Offset like this to fix an invisible entity bug
-
-		//Set pathfinders
-		setupPathfinders();
+		entity.setPosition(x, y+5, z);	//Will be set back to normal at the end of the constructor. Offset like this to fix an invisible entity bug
 
 		//Set items
 		org.bukkit.inventory.ItemStack[] items = type.getItems();
 		if(items != null)
 		{
-			for(int i = 0; i <= 4; i++)
+			for(int i = 0; i <= 4 && i < items.length; i++)
 			{
 				if(items[i] != null)
 				{
@@ -69,11 +65,11 @@ public class CustomEntityWrapper
 			}
 		}
 
+		setupPathfinders();
+
 		//Set health
 		health = type.getMaxHealth();
-		
-		//And then speed
-		setSpeed(type.getSpeed());
+		maxHealth = type.getMaxHealth();
 		
 		customEntities.put(entity, this);
 		//Reload visibility
@@ -85,7 +81,10 @@ public class CustomEntityWrapper
 				if(entity.getHealth() > 0)
 				{
 					entity.setPosition(x, y, z);
+					entity.setPosition(x, y, z);
+					entity.setPosition(x, y, z);
 					immune = false;
+					reloadPathfinders();
 				}
 			}
 		},1L);
@@ -95,8 +94,8 @@ public class CustomEntityWrapper
     {
     	String p = null;
     	String p2 = null;
-    	int damage = 0;
-    	for(Entry<String, Integer> e: damagers.entrySet())
+		double damage = 0;
+    	for(Entry<String, Double> e: damagers.entrySet())
     	{
     		if(e.getValue() > damage)
     		{
@@ -113,8 +112,8 @@ public class CustomEntityWrapper
 	public Player getBestAttacker()
     {
     	String p = null;
-    	int damage = 0;
-    	for(Entry<String, Integer> e: damagers.entrySet())
+    	double damage = 0;
+    	for(Entry<String, Double> e: damagers.entrySet())
     	{
     		if(e.getValue() > damage)
     		{
@@ -127,12 +126,12 @@ public class CustomEntityWrapper
     	return Bukkit.getPlayer(p);
     }
 	
-	public EntityLiving getEntity()
+	public EntityInsentient getEntity()
 	{
 		return entity;
 	}
 	
-	public int getHealth()
+	public double getHealth()
 	{
 		return health;
 	}
@@ -152,31 +151,41 @@ public class CustomEntityWrapper
 		health = maxHealth;
 	}
 	
-	public void setHealth(int health)
+	public void setHealth(double health)
 	{
 		this.health = health;
 	}
 	
-	public void setMaxHealth(int health)
+	public void setMaxHealth(double health)
 	{
 		maxHealth = health;
 	}
 	
-	public int getMaxHealth()
+	public double getMaxHealth()
 	{
 		return maxHealth;
 	}
+
+	public List<PathfinderGoal> getGoalSelectors()
+	{
+		return goalSelectors;
+	}
+
+	public List<PathfinderGoal> getTargetSelectors()
+	{
+		return targetSelectors;
+	}
 	
 	@SuppressWarnings("rawtypes")
-	private void setupPathfinders()
+	public void reloadPathfinders()
 	{
 		//Get the goal/target selectors, and reset them
 		PathfinderGoalSelector goalSelector;
 		PathfinderGoalSelector targetSelector;
 		try
 		{
-			Field goalSelectorField = EntityLiving.class.getDeclaredField("goalSelector");
-			Field targetSelectorField = EntityLiving.class.getDeclaredField("targetSelector");
+			Field goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
+			Field targetSelectorField = EntityInsentient.class.getDeclaredField("targetSelector");
 
 			goalSelectorField.setAccessible(true);
 			targetSelectorField.setAccessible(true);
@@ -197,53 +206,47 @@ public class CustomEntityWrapper
 			return;
 		}
 
-		//Take the reset goal/target selectors and readd new pathfinders from the given entity type
-		if(type.getGoalSelectors(entity, type) == null)
+		for(int i = 0; i < goalSelectors.size(); i++)
 		{
-			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getGoalSelectors(entity, type).entrySet())
-			{
-				targetSelector.a(e.getKey(), e.getValue());
-			}
-		} else
-		{
-			for(Entry<Integer, PathfinderGoal> e : type.getGoalSelectors(entity, type).entrySet())
-			{
-				goalSelector.a(e.getKey(), e.getValue());
-			}
+			goalSelector.a(i, goalSelectors.get(i));
 		}
-		if(type.getTargetSelectors(entity, type) == null)
+		for(int i = 0; i < targetSelectors.size(); i++)
 		{
-			for(Entry<Integer, PathfinderGoal> e : DefaultPathfinders.getTargetSelectors(entity, type).entrySet())
-			{
-				targetSelector.a(e.getKey(), e.getValue());
-			}
-		} else
-		{
-			for(Entry<Integer, PathfinderGoal> e : type.getTargetSelectors(entity, type).entrySet())
-			{
-				targetSelector.a(e.getKey(), e.getValue());
-			}
+			targetSelector.a(i, targetSelectors.get(i));
 		}
 	}
-	
-	private void setSpeed(float speed)
-	{
-		Field f;
-		try
-		{
-			f = EntityLiving.class.getDeclaredField(NMS.SPEED);
 
-			f.setAccessible(true);
-			f.setFloat(entity, speed);
-		} catch (Exception e)
+	private void setupPathfinders()
+	{
+		if(type.getGoalSelectors(entity) == null)
 		{
-			e.printStackTrace();
+			goalSelectors = DefaultPathfinders.getGoalSelectors(entity, type);
+		} else
+		{
+			goalSelectors = type.getGoalSelectors(entity);
+		}
+		if(type.getTargetSelectors(entity) == null)
+		{
+			targetSelectors = DefaultPathfinders.getTargetSelectors(entity, type);
+		} else
+		{
+			targetSelectors = type.getTargetSelectors(entity);
 		}
 	}
+
+	public void setImmune(boolean immune)
+	{
+		this.immune = immune;
+	}
+
+	public boolean isImmune()
+	{
+		return immune;
+	}
 	
-	public void addAttack(Player p, int damage)
+	public void addAttack(Player p, double damage)
     {
-    	int damagex = 0;
+    	double damagex = 0;
     	if(damagers.get(p.getName()) != null)
     		damagex = damagers.get(p.getName());
     	damagers.put(p.getName(), damage + damagex);
@@ -256,12 +259,10 @@ public class CustomEntityWrapper
 	 */
 	public static boolean instanceOf(Entity entity)
 	{
-		if(customEntities.containsKey(((CraftEntity) entity).getHandle()))
-			return true;
-		return false;
+		return customEntities.containsKey(((CraftEntity) entity).getHandle());
 	}
 	
-	public static Map<EntityLiving, CustomEntityWrapper> getCustomEntities()
+	public static Map<EntityInsentient, CustomEntityWrapper> getCustomEntities()
 	{
 		return customEntities;
 	}
@@ -278,7 +279,7 @@ public class CustomEntityWrapper
 		return null;
 	}
 	
-	public static CustomEntityWrapper spawnCustomEntity(EntityLiving entity, World world, double x, double y, double z, EntityType type)
+	public static CustomEntityWrapper spawnCustomEntity(EntityInsentient entity, World world, double x, double y, double z, EntityType type)
 	{
 		entity.getBukkitEntity().getLocation().getChunk().load();
 		if(!((CraftWorld) world).getHandle().addEntity(entity, SpawnReason.CUSTOM))
@@ -297,8 +298,84 @@ public class CustomEntityWrapper
 		return customEnt;
 	}
 	
-	public static CustomEntityWrapper spawnCustomEntity(EntityLiving entity, Location location, EntityType type)
+	public static CustomEntityWrapper spawnCustomEntity(EntityInsentient entity, Location location, EntityType type)
 	{
 		return spawnCustomEntity(entity, location.getWorld(), location.getX(), location.getY(), location.getZ(), type);
+	}
+
+	public static CustomEntityWrapper spawnCustomEntity(EntityType type, World world, double x, double y, double z)
+	{
+		org.bukkit.entity.EntityType bukkitType = org.bukkit.entity.EntityType.valueOf(type.getPreferredType().toUpperCase().replaceAll(" ", "_"));
+		net.minecraft.server.v1_6_R1.World nmsWorld = ((CraftWorld)world).getHandle();
+		EntityInsentient entity;
+		switch(bukkitType)
+		{
+			case BAT:
+				entity = new EntityBat(nmsWorld);
+				break;
+			case CREEPER:
+				entity = new EntityCreeper(nmsWorld);
+				break;
+			case ENDERMAN:
+				entity = new EntityEnderman(nmsWorld);
+				break;
+			case GHAST:
+				entity = new EntityGhast(nmsWorld);
+				break;
+			case GIANT:
+				entity = new CustomGiant(nmsWorld);
+				break;
+			case IRON_GOLEM:
+				entity = new EntityIronGolem(nmsWorld);
+				break;
+			case MAGMA_CUBE:
+				entity = new EntityMagmaCube(nmsWorld);
+				break;
+			case OCELOT:
+				entity = new EntityOcelot(nmsWorld);
+				break;
+			case PIG_ZOMBIE:
+				entity = new CustomPigZombie(nmsWorld);
+				break;
+			case SKELETON:
+				entity = new EntitySkeleton(nmsWorld);
+				break;
+			case SLIME:
+				entity = new EntitySlime(nmsWorld);
+				break;
+			case SNOWMAN:
+				entity = new EntitySnowman(nmsWorld);
+				break;
+			case SPIDER:
+				entity = new EntitySpider(nmsWorld);
+				break;
+			case SQUID:
+				entity = new EntitySquid(nmsWorld);
+				break;
+			case VILLAGER:
+				entity = new EntityVillager(nmsWorld);
+				break;
+			case WITCH:
+				entity = new EntityWitch(nmsWorld);
+				break;
+			case WITHER:
+				entity = new EntityWither(nmsWorld);
+				break;
+			case WOLF:
+				entity = new EntityWolf(nmsWorld);
+				break;
+			case ZOMBIE:
+				entity = new EntityZombie(nmsWorld);
+				break;
+			default:
+				// :(
+				entity = null;
+		}
+		return spawnCustomEntity(entity, world, x, y, z, type);
+	}
+
+	public static CustomEntityWrapper spawnCustomEntity(EntityType type, Location location)
+	{
+		return spawnCustomEntity(type, location.getWorld(), location.getX(), location.getY(), location.getZ());
 	}
 }

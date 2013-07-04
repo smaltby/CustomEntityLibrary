@@ -1,23 +1,21 @@
 package com.github.customentitylibrary.pathfinders;
 
-import java.lang.reflect.Field;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import com.github.customentitylibrary.utils.NMS;
-
-import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_6_R1.EntityInsentient;
 
 public class PathfinderSwim extends PathfinderBase
 {
-	EntityLiving entity;
+	EntityInsentient entity;
 	int i = 0;
 	boolean canDive;
-	public PathfinderSwim(EntityLiving ent, boolean canDive)
+	float speed;
+	public PathfinderSwim(EntityInsentient ent, boolean canDive, float speed)
 	{
 		entity = ent;
 		this.canDive = canDive;
+		this.speed = speed;
 	}
 	
 	@Override
@@ -26,17 +24,7 @@ public class PathfinderSwim extends PathfinderBase
 		if(entity.G() && !entity.isInvulnerable())	//If is in water and hasn't just been hit
 		{
 			Entity ent = entity.getBukkitEntity();
-			double speed = .23f;
-			try
-			{
-				Field f = EntityLiving.class.getDeclaredField(NMS.SPEED);
-				f.setAccessible(true);
-				speed = f.getFloat(entity);
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			Vector dir = ent.getLocation().getDirection().normalize().multiply(speed/2);
+			Vector dir = ent.getLocation().getDirection().normalize().multiply(speed/9);
 			double y = dir.getY();
 			if(y > -.05 && i % 20 == 0)
 				y = .3;
