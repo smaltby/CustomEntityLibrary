@@ -1,9 +1,11 @@
 package com.github.customentitylibrary.pathfinders;
 
-import net.minecraft.server.v1_6_R1.*;
-import org.bukkit.craftbukkit.v1_6_R1.event.CraftEventFactory;
+import net.minecraft.server.v1_6_R2.*;
+import org.bukkit.craftbukkit.v1_6_R2.event.CraftEventFactory;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityTargetEvent;
+
+import java.util.Random;
 
 public class PathfinderCustomArrowAttack extends PathfinderBase
 {
@@ -18,6 +20,8 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 	private String projectileName;
 
 	private CustomFireProjectile customFire = null;
+
+	Random rnd = new Random();
 
 	public PathfinderCustomArrowAttack(EntityInsentient entity, float speed, int attackSpeed, int maxRange, int minRange)
 	{
@@ -140,7 +144,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				if (EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_FIRE.id, entity.getEquipment()[0]) > 0)
 					entityarrow.setOnFire(100);
 
-				entity.makeSound("random.bow", 1.0F, 1.0F / (entity.aB().nextFloat() * 0.4F + 0.8F));
+				entity.makeSound("random.bow", 1.0F, 1.0F / (rnd.nextFloat() * 0.4F + 0.8F));
 				entity.world.addEntity(entityarrow);
 				break;
 			case SNOWBALL:
@@ -151,7 +155,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				float f1 = MathHelper.sqrt(d0 * d0 + d2 * d2) * 0.2F;
 
 				entitysnowball.shoot(d0, d1 + f1, d2, 1.6F, 12.0F);
-				entity.makeSound("random.bow", 1.0F, 1.0F / (entity.aB().nextFloat() * 0.4F + 0.8F));
+				entity.makeSound("random.bow", 1.0F, 1.0F / (rnd.nextFloat() * 0.4F + 0.8F));
 				entity.world.addEntity(entitysnowball);
 				break;
 			case FIREBALL:
@@ -172,14 +176,14 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				entity.world.addEntity(entitylargefireball);
 				break;
 			case SMALL_FIREBALL:
-				d0 = target.locX - entity.locX + entity.aB().nextDouble() * 3;
+				d0 = target.locX - entity.locX + rnd.nextDouble() * 3;
 				d1 = target.boundingBox.b + target.length / 2.0F - (entity.locY + entity.length / 2.0F);
-				d2 = target.locZ - entity.locZ + entity.aB().nextDouble() * 3;
+				d2 = target.locZ - entity.locZ + rnd.nextDouble() * 3;
 				f1 = MathHelper.c(f) * 0.5F;
 
 				entity.world.a(null, 1009, (int)entity.locX, (int)entity.locY, (int)entity.locZ, 0);
 
-				EntitySmallFireball entitysmallfireball = new EntitySmallFireball(entity.world, entity, d0 + entity.aB().nextGaussian() * f1, d1, d2 + entity.aB().nextGaussian() * f1);
+				EntitySmallFireball entitysmallfireball = new EntitySmallFireball(entity.world, entity, d0 + rnd.nextGaussian() * f1, d1, d2 + rnd.nextGaussian() * f1);
 
 				entitysmallfireball.locY = (entity.locY + entity.length / 2.0F + 0.5D);
 				entity.world.addEntity(entitysmallfireball);
@@ -197,7 +201,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				d8 = d2 - d5;
 				EntityWitherSkull entitywitherskull = new EntityWitherSkull(entity.world, entity, d6, d7, d8);
 
-				if (entity.aB().nextFloat() < 0.001F) {
+				if (rnd.nextFloat() < 0.001F) {
 					entitywitherskull.a(true);
 				}
 
@@ -228,7 +232,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				f1 = MathHelper.sqrt(d0 * d0 + d2 * d2) * 0.2F;
 
 				egg.shoot(d0, d1 + f1, d2, 1.6F, 12.0F);
-				entity.makeSound("random.bow", 1.0F, 1.0F / (entity.aB().nextFloat() * 0.4F + 0.8F));
+				entity.makeSound("random.bow", 1.0F, 1.0F / (rnd.nextFloat() * 0.4F + 0.8F));
 				entity.world.addEntity(egg);
 				break;
 			default:

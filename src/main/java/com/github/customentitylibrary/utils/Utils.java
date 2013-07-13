@@ -1,7 +1,7 @@
 package com.github.customentitylibrary.utils;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 

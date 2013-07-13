@@ -5,10 +5,10 @@ import com.github.customentitylibrary.CustomEntitySpawnEvent;
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
 
 import com.github.customentitylibrary.utils.NMS;
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_6_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_6_R2.util.UnsafeList;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -47,7 +47,8 @@ public class LibraryEntityListener implements Listener
 		}
 	}
 	
-	
+	//Set priority to monitor because annoying plugins keep innapropriately using the HIGHEST priority, making them
+	//incompatible. Assholes...
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void calculateHealth(EntityDamageEvent event)
 	{
@@ -66,7 +67,7 @@ public class LibraryEntityListener implements Listener
 			else
 			{
 				event.setDamage(1d);
-				double percentHealth = (double) customEnt.getHealth() / customEnt.getMaxHealth();
+				double percentHealth = customEnt.getHealth() / customEnt.getMaxHealth();
 				LivingEntity livingEntity = (LivingEntity) ent;
 				livingEntity.setHealth((int) Math.ceil(livingEntity.getMaxHealth() * percentHealth));
 			}

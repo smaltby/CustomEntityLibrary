@@ -1,7 +1,7 @@
 package com.github.customentitylibrary.entities;
 
-import net.minecraft.server.v1_6_R1.EntityGiantZombie;
-import net.minecraft.server.v1_6_R1.World;
+import net.minecraft.server.v1_6_R2.EntityGiantZombie;
+import net.minecraft.server.v1_6_R2.World;
 
 public class CustomGiant extends EntityGiantZombie
 {
@@ -14,7 +14,7 @@ public class CustomGiant extends EntityGiantZombie
 	 * Returns true if the newer Entity AI code should be run
 	 */
 	@Override
-	protected boolean bb()
+	protected boolean be()
 	{
 		return true;
 	}
