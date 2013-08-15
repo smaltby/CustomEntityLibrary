@@ -157,4 +157,10 @@ public interface EntityType
 	 * @return	whether or not this entity uses ranged
 	 */
 	public boolean useRanged();
+
+	/**
+	 * A command to be run when this entity spawns. If an empty string, no command is run.
+	 * @return command to run
+	 */
+	public String getSpawnCommand();
 }

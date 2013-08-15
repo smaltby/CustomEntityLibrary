@@ -70,6 +70,9 @@ public class CustomEntityWrapper
 		//Set health
 		health = type.getMaxHealth();
 		maxHealth = type.getMaxHealth();
+
+		if(type.getSpawnCommand().length() > 0)
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), type.getSpawnCommand());
 		
 		customEntities.put(entity, this);
 		//Reload visibility
@@ -282,11 +285,9 @@ public class CustomEntityWrapper
 	public static CustomEntityWrapper spawnCustomEntity(EntityInsentient entity, World world, double x, double y, double z, EntityType type)
 	{
 		entity.getBukkitEntity().getLocation().getChunk().load();
+		//Event cancelled
 		if(!((CraftWorld) world).getHandle().addEntity(entity, SpawnReason.CUSTOM))
-		{
-			CustomEntityLibrary.log("Entity failed to spawn in an odd way. Please report this to the dev.");
 			return null;
-		}
 		CustomEntityWrapper customEnt = new CustomEntityWrapper(entity, world, x, y, z, type);
 		CustomEntitySpawnEvent event = new CustomEntitySpawnEvent(customEnt, new Location(world, x, y, z));
 		Bukkit.getPluginManager().callEvent(event);

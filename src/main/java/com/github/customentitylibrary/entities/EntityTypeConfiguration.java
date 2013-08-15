@@ -42,6 +42,7 @@ public class EntityTypeConfiguration implements EntityType
 	boolean ignoreInvisible;
 	int rangedDelay;
 	String rangedType;
+	String spawnCommand;
 	String skinURL;
 	List<DamageEffect> damageEffects = new ArrayList<DamageEffect>();
 	List<SpecialEffect> specialEffects = new ArrayList<SpecialEffect>();
@@ -93,6 +94,7 @@ public class EntityTypeConfiguration implements EntityType
 		}
 		rangedType = config.getString("RangedAttackType", config.getString("Ranged Attack Type", "Arrow"));
 		rangedDelay = config.getInt("ShootDelay", 60);
+		spawnCommand = config.getString("SpawnCommand", "");
 		skinURL = config.getString("SkinURL", config.getString("Skin URL", null));
 		if(config.getStringList("Immunities") != null)
 		{
@@ -303,5 +305,11 @@ public class EntityTypeConfiguration implements EntityType
 	public boolean disableKnockbackToSelf()
 	{
 		return disableKnockback;
+	}
+
+	@Override
+	public String getSpawnCommand()
+	{
+		return spawnCommand;
 	}
 }

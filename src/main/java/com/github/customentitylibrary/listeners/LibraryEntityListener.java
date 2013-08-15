@@ -48,8 +48,8 @@ public class LibraryEntityListener implements Listener
 	}
 	
 	//Set priority to monitor because annoying plugins keep innapropriately using the HIGHEST priority, making them
-	//incompatible. Assholes...
-	@EventHandler(priority = EventPriority.HIGHEST)
+	//incompatible.
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void calculateHealth(EntityDamageEvent event)
 	{
 		if(event.isCancelled())
