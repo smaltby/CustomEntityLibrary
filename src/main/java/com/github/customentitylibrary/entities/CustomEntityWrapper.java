@@ -88,6 +88,9 @@ public class CustomEntityWrapper
 					entity.setPosition(x, y, z);
 					immune = false;
 					reloadPathfinders();
+
+					//The entity may have picked a target immediately after spawning. In case this target was picked using code that was later removed, remove the target
+					entity.setGoalTarget(null);
 				}
 			}
 		},1L);
@@ -294,6 +297,7 @@ public class CustomEntityWrapper
 		if(event.isCancelled())
 		{
 			customEnt.getEntity().setHealth(0);
+			customEntities.remove(entity);
 			return null;
 		}
 		return customEnt;

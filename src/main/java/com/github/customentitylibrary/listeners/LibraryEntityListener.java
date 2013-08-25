@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -191,6 +192,17 @@ public class LibraryEntityListener implements Listener
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void removeDeadEntity(EntityDeathEvent event)
+	{
+		LivingEntity entity = event.getEntity();
+		if(CustomEntityWrapper.instanceOf(entity))
+		{
+			EntityInsentient nmsEntity = CustomEntityWrapper.getCustomEntity(entity).getEntity();
+			CustomEntityWrapper.getCustomEntities().remove(nmsEntity);
 		}
 	}
 

@@ -43,7 +43,7 @@ public class SpecialEffect
 	public void showEffect(LivingEntity entity)
 	{
 		Location source = entity.getLocation();
-		PotionEffectType potionType = null;
+		PotionEffectType potionType;
 		if(name.equals(POTION))
 		{
 			potionType = PotionEffectType.getByName(args[0].toUpperCase().replaceAll(" ", "_"));
@@ -55,7 +55,7 @@ public class SpecialEffect
 			PotionEffect effect = null;
 			if(potionType != null)
 				effect = new PotionEffect(potionType, Utils.parseInt(args[2], 100), Utils.parseInt(args[3], 1));
-			if(potionType == null || effect == null)
+			if(potionType == null)
 				return;
 			for(Player p: source.getWorld().getPlayers())
 			{
