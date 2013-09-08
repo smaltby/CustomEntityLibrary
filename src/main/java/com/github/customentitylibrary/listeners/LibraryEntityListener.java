@@ -196,14 +196,21 @@ public class LibraryEntityListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void removeDeadEntity(EntityDeathEvent event)
+	public void removeDeadEntity(final EntityDeathEvent event)
 	{
-		LivingEntity entity = event.getEntity();
-		if(CustomEntityWrapper.instanceOf(entity))
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CustomEntityLibrary.plugin, new Runnable()
 		{
-			EntityInsentient nmsEntity = CustomEntityWrapper.getCustomEntity(entity).getEntity();
-			CustomEntityWrapper.getCustomEntities().remove(nmsEntity);
-		}
+			@Override
+			public void run()
+			{
+				LivingEntity entity = event.getEntity();
+				if(CustomEntityWrapper.instanceOf(entity))
+				{
+					EntityInsentient nmsEntity = CustomEntityWrapper.getCustomEntity(entity).getEntity();
+					CustomEntityWrapper.getCustomEntities().remove(nmsEntity);
+				}
+			}
+		}, 5L);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

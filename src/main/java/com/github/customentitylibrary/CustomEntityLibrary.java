@@ -1,6 +1,8 @@
 package com.github.customentitylibrary;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Level;
 
@@ -45,15 +47,15 @@ public class CustomEntityLibrary
 	{
 		if(tick % 20 == 0)
 		{
-			Stack<EntityInsentient> toRemove = new Stack<EntityInsentient>();
-			for(CustomEntityWrapper ent : CustomEntityWrapper.getCustomEntities().values())
+			Iterator<Map.Entry<EntityInsentient, CustomEntityWrapper>> entities = CustomEntityWrapper.getCustomEntities().entrySet().iterator();
+			while(entities.hasNext())
 			{
-				if(!ent.getEntity().isAlive())
-					toRemove.add(ent.getEntity());
+				Map.Entry<EntityInsentient, CustomEntityWrapper> next = entities.next();
+				if(!next.getKey().isAlive())
+					entities.remove();
 				else
-					ent.getType().showSpecialEffects((LivingEntity) ent.getEntity().getBukkitEntity());
+					next.getValue().getType().showSpecialEffects((LivingEntity) next.getKey().getBukkitEntity());
 			}
-			for(EntityInsentient ent : toRemove) CustomEntityWrapper.getCustomEntities().remove(ent);
 		}
 		tick++;
 	}

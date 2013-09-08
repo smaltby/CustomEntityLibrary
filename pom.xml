@@ -9,17 +9,27 @@
     <name>CustomEntityLibrary</name>
     <description>A library for highly customizable entities using the Bukkit API.</description>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bukkit_version>1.6.2-R0.2-SNAPSHOT</bukkit_version>
+        <github.global.server>github</github.global.server>
+        <built.repo.dir>${project.build.directory}/mvn-repo</built.repo.dir>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub ${project.artifactId} Repository</name>
+            <url>https://raw.github.com/smaltby/${project.artifactId}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
     </repositories>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkit_version>1.6.2-R0.2-SNAPSHOT</bukkit_version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -60,6 +70,38 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <altDeploymentRepository>internal.repo::default::file://${built.repo.dir}</altDeploymentRepository>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.8</version>
+                <configuration>
+                    <message>Maven artifacts for ${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${built.repo.dir}</outputDirectory>
+                    <branch>refs/heads/mvn-repo</branch>
+                    <includes><include>**/*</include></includes>
+                    <repositoryName>CustomEntityLibrary</repositoryName>
+                    <repositoryOwner>smaltby</repositoryOwner>
+                    <merge>true</merge>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
