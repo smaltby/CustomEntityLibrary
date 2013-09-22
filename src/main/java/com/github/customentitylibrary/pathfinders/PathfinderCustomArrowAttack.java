@@ -1,7 +1,7 @@
 package com.github.customentitylibrary.pathfinders;
 
-import net.minecraft.server.v1_6_R2.*;
-import org.bukkit.craftbukkit.v1_6_R2.event.CraftEventFactory;
+import net.minecraft.server.v1_6_R3.*;
+import org.bukkit.craftbukkit.v1_6_R3.event.CraftEventFactory;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityTargetEvent;
 
@@ -166,7 +166,7 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				entity.world.a(null, 1008, (int)entity.locX, (int)entity.locY, (int)entity.locZ, 0);
 				EntityLargeFireball entitylargefireball = new EntityLargeFireball(entity.world, entity, d5, d6, d7);
 
-				entitylargefireball.yield = (entitylargefireball.e = 1);
+				entitylargefireball.yield = (int) (entitylargefireball.bukkitYield = 1);
 				double d8 = 4.0D;
 				Vec3D vec3d = entity.j(1.0F);
 

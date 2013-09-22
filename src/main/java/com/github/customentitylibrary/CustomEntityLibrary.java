@@ -3,7 +3,6 @@ package com.github.customentitylibrary;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Stack;
 import java.util.logging.Level;
 
 import com.github.customentitylibrary.entities.CustomEntityWrapper;
@@ -11,11 +10,11 @@ import com.github.customentitylibrary.entities.CustomGiant;
 import com.github.customentitylibrary.entities.CustomPigZombie;
 import com.github.customentitylibrary.listeners.LibraryEntityListener;
 
-import net.minecraft.server.v1_6_R2.EntityGiantZombie;
-import net.minecraft.server.v1_6_R2.EntityInsentient;
+import net.minecraft.server.v1_6_R3.EntityGiantZombie;
+import net.minecraft.server.v1_6_R3.EntityInsentient;
 
-import net.minecraft.server.v1_6_R2.EntityPigZombie;
-import net.minecraft.server.v1_6_R2.EntityTypes;
+import net.minecraft.server.v1_6_R3.EntityPigZombie;
+import net.minecraft.server.v1_6_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.PluginManager;

@@ -3,7 +3,7 @@ package com.github.customentitylibrary.pathfinders;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_6_R2.EntityInsentient;
+import net.minecraft.server.v1_6_R3.EntityInsentient;
 
 public class PathfinderSwim extends PathfinderBase
 {

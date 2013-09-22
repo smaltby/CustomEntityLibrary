@@ -1,7 +1,7 @@
 package com.github.customentitylibrary.entities;
 
-import net.minecraft.server.v1_6_R2.EntityPigZombie;
-import net.minecraft.server.v1_6_R2.World;
+import net.minecraft.server.v1_6_R3.EntityPigZombie;
+import net.minecraft.server.v1_6_R3.World;
 
 public class CustomPigZombie extends EntityPigZombie
 {
@@ -14,7 +14,7 @@ public class CustomPigZombie extends EntityPigZombie
 	 * Returns true if the newer Entity AI code should be run
 	 */
 	@Override
-	protected boolean be()
+	protected boolean bf()
 	{
 		return true;
 	}
