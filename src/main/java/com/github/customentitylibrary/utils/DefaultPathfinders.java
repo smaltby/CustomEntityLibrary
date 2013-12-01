@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.github.customentitylibrary.entities.EntityType;
 import com.github.customentitylibrary.pathfinders.*;
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 
 public class DefaultPathfinders
 {
@@ -40,7 +40,7 @@ public class DefaultPathfinders
 			pathfinders.add(new PathfinderSwim(ent, type.canDive(), speed));
 	        pathfinders.add(new PathfinderGoalPanic((EntityCreature) ent, speed * 1.52f));
 	        pathfinders.add(new PathfinderGoalBreed((EntityAnimal) ent, speed));
-	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed, Item.SEEDS.id, false));
+	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed, Items.SEEDS, false));
 	        pathfinders.add(new PathfinderGoalFollowParent((EntityAnimal) ent, speed * 1.12f));
 	        pathfinders.add(new PathfinderGoalRandomStroll((EntityCreature) ent, speed));
 	        pathfinders.add(new PathfinderGoalLookAtPlayer(ent, EntityHuman.class, 6.0F));
@@ -50,7 +50,7 @@ public class DefaultPathfinders
 			pathfinders.add(new PathfinderSwim(ent, type.canDive(), speed));
 	        pathfinders.add(new PathfinderGoalPanic((EntityCreature) ent, speed * 1.52f));
 	        pathfinders.add(new PathfinderGoalBreed((EntityAnimal) ent, speed * .8f));
-	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed, Item.WHEAT.id, false));
+	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed, Items.WHEAT, false));
 	        pathfinders.add(new PathfinderGoalFollowParent((EntityAnimal) ent, speed));
 	        pathfinders.add(new PathfinderGoalRandomStroll((EntityCreature) ent, speed * .8f));
 	        pathfinders.add(new PathfinderGoalLookAtPlayer(ent, EntityHuman.class, 6.0F));
@@ -86,7 +86,7 @@ public class DefaultPathfinders
 		{
 			pathfinders.add(new PathfinderSwim(ent, type.canDive(), speed));
 	        pathfinders.add((PathfinderGoal) getField(EntityTameableAnimal.class, ent, NMS.ANIMAL_GOALSELECTOR2));
-	        pathfinders.add((PathfinderGoal) setField(EntityOcelot.class, ent, NMS.OCELOT_TEMPT, new PathfinderGoalTempt((EntityCreature) ent, 0.18F, Item.RAW_FISH.id, true)));
+	        pathfinders.add((PathfinderGoal) setField(EntityOcelot.class, ent, NMS.OCELOT_TEMPT, new PathfinderGoalTempt((EntityCreature) ent, 0.18F, Items.RAW_FISH, true)));
 	        pathfinders.add(new PathfinderGoalAvoidPlayer((EntityCreature) ent, EntityHuman.class, 16.0F, speed, 0.4F));
 	        pathfinders.add(new PathfinderGoalFollowOwner((EntityTameableAnimal) ent, speed * 1.3f, 10.0F, 5.0F));
 	        pathfinders.add(new PathfinderGoalJumpOnBlock((EntityOcelot) ent, speed * 1.74f));
@@ -102,8 +102,8 @@ public class DefaultPathfinders
 	        pathfinders.add(new PathfinderGoalPanic((EntityCreature) ent, speed * 1.52f));
 	        pathfinders.add((PathfinderGoal) setField(EntityTameableAnimal.class, ent, NMS.ANIMAL_GOALSELECTOR2, new PathfinderGoalPassengerCarrotStick(ent, speed * 1.36f)));
 	        pathfinders.add(new PathfinderGoalBreed((EntityAnimal) ent, speed));
-	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed * 1.2f, Item.CARROT_STICK.id, false));
-	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed * 1.2f, Item.CARROT.id, false));
+	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed * 1.2f, Items.CARROT_STICK, false));
+	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed * 1.2f, Items.CARROT, false));
 	        pathfinders.add(new PathfinderGoalFollowParent((EntityAnimal) ent, speed * 1.12f));
 	        pathfinders.add(new PathfinderGoalRandomStroll((EntityCreature) ent, speed));
 	        pathfinders.add(new PathfinderGoalLookAtPlayer(ent, EntityHuman.class, 6.0F));
@@ -113,7 +113,7 @@ public class DefaultPathfinders
 			pathfinders.add(new PathfinderSwim(ent, type.canDive(), speed));
 	        pathfinders.add(new PathfinderGoalPanic((EntityCreature) ent, speed * 1.652f));
 	        pathfinders.add(new PathfinderGoalBreed((EntityAnimal) ent, speed));
-	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed * 1.087f, Item.WHEAT.id, false));
+	        pathfinders.add(new PathfinderGoalTempt((EntityCreature) ent, speed * 1.087f, Items.WHEAT, false));
 	        pathfinders.add(new PathfinderGoalFollowParent((EntityAnimal) ent, speed * 1.087f));
 	        pathfinders.add((PathfinderGoal) getField(EntitySheep.class, ent, NMS.SHEEP_EAT_TILE));
 	        pathfinders.add(new PathfinderGoalRandomStroll((EntityCreature) ent, speed));

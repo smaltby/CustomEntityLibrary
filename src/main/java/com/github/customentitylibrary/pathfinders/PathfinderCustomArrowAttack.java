@@ -1,7 +1,7 @@
 package com.github.customentitylibrary.pathfinders;
 
-import net.minecraft.server.v1_6_R3.*;
-import org.bukkit.craftbukkit.v1_6_R3.event.CraftEventFactory;
+import net.minecraft.server.v1_7_R1.*;
+import org.bukkit.craftbukkit.v1_7_R1.event.CraftEventFactory;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityTargetEvent;
 
@@ -135,8 +135,10 @@ public class PathfinderCustomArrowAttack extends PathfinderBase
 				int eDamage = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_DAMAGE.id, entity.getEquipment()[0]);
 				int eKnockback = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK.id, entity.getEquipment()[0]);
 
+				//entityarrow.e() gets the current damage, entityarrow.b(double damage) sets damage
+				//Check both on updates
 				if (eDamage > 0)
-					entityarrow.b(entityarrow.c() + (double) eDamage * 0.5D + 0.5D);
+					entityarrow.b(entityarrow.e() + (double) eDamage * 0.5D + 0.5D);
 
 				if (eKnockback > 0)
 					entityarrow.a(eKnockback);

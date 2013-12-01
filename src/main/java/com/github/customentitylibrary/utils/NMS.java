@@ -2,8 +2,8 @@ package com.github.customentitylibrary.utils;
 
 public class NMS
 {
-	//Can be found in PathfinderSelector class, it's the first list
-	public static final String PATHFINDER_LIST = "a";
+	//Can be found in PathfinderGoalSelector class, it's the first list
+	public static final String PATHFINDER_LIST = "b";
 	//Found in Ocelot's second goal selector (or wolf)
 	public static final String ANIMAL_GOALSELECTOR2 = "bp";
 	//In Ocelot's field, private PathfinderGoalTempt <name>;

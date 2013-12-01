@@ -3,7 +3,7 @@ package com.github.customentitylibrary.pathfinders;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_6_R3.EntityInsentient;
+import net.minecraft.server.v1_7_R1.EntityInsentient;
 
 public class PathfinderSwim extends PathfinderBase
 {
@@ -21,7 +21,8 @@ public class PathfinderSwim extends PathfinderBase
 	@Override
 	public boolean shouldExecute()
 	{
-		if(entity.G() && !entity.isInvulnerable())	//If is in water and hasn't just been hit
+		//For the method that checks if the entity is in water, the best way to update that is to just check the github diffs
+		if(entity.L() && !entity.isInvulnerable())	//If is in water and hasn't just been hit
 		{
 			Entity ent = entity.getBukkitEntity();
 			Vector dir = ent.getLocation().getDirection().normalize().multiply(speed/9);

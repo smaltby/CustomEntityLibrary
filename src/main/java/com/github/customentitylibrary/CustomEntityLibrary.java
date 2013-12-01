@@ -10,11 +10,11 @@ import com.github.customentitylibrary.entities.CustomGiant;
 import com.github.customentitylibrary.entities.CustomPigZombie;
 import com.github.customentitylibrary.listeners.LibraryEntityListener;
 
-import net.minecraft.server.v1_6_R3.EntityGiantZombie;
-import net.minecraft.server.v1_6_R3.EntityInsentient;
+import net.minecraft.server.v1_7_R1.EntityGiantZombie;
+import net.minecraft.server.v1_7_R1.EntityInsentient;
 
-import net.minecraft.server.v1_6_R3.EntityPigZombie;
-import net.minecraft.server.v1_6_R3.EntityTypes;
+import net.minecraft.server.v1_7_R1.EntityPigZombie;
+import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.PluginManager;
