@@ -1,6 +1,7 @@
 package com.github.customentitylibrary;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
@@ -10,11 +11,8 @@ import com.github.customentitylibrary.entities.CustomGiant;
 import com.github.customentitylibrary.entities.CustomPigZombie;
 import com.github.customentitylibrary.listeners.LibraryEntityListener;
 
-import net.minecraft.server.v1_7_R1.EntityGiantZombie;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R1.*;
 
-import net.minecraft.server.v1_7_R1.EntityPigZombie;
-import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.PluginManager;
@@ -59,28 +57,65 @@ public class CustomEntityLibrary
 		tick++;
 	}
 
-	@SuppressWarnings("rawtypes")
 	private static void loadCustomEntities()
+	{
+		HashMap[] typeHashMaps = getEntityTypesHashMaps();
+		HashMap eggTypeHashMap = getEntityTypesEggHashMap();
+
+		loadCustomEntity(CustomPigZombie.class, "PigZombie", typeHashMaps, eggTypeHashMap, 57);
+		loadCustomEntity(CustomGiant.class, "Giant", typeHashMaps, eggTypeHashMap, 53);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void loadCustomEntity(Class entityClass, String entityName, HashMap[] typeHashMaps, HashMap eggTypeHashMap, int id)
+	{
+		typeHashMaps[0].put(entityName, entityClass);
+		typeHashMaps[1].put(entityClass, entityName);
+		typeHashMaps[2].put(id, entityClass);
+		typeHashMaps[3].put(entityClass, id);
+		typeHashMaps[4].put(entityName, id);
+	}
+
+	private static HashMap[] getEntityTypesHashMaps()
 	{
 		try
 		{
-			Class[] entityWithEggArgs = {Class.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE};
-			Method entityWithEggList = EntityTypes.class.getDeclaredMethod("a", entityWithEggArgs);
-			entityWithEggList.setAccessible(true);
-
-			entityWithEggList.invoke(entityWithEggList, CustomPigZombie.class, "PigZombie", 57, 15373203, 5009705);
-			entityWithEggList.invoke(entityWithEggList, EntityPigZombie.class, "PigZombie", 57, 15373203, 5009705);
-
-			Class[] entityWithoutEggArgs = {Class.class, String.class, Integer.TYPE};
-			Method entityWithoutEggList = EntityTypes.class.getDeclaredMethod("a", entityWithoutEggArgs);
-			entityWithoutEggList.setAccessible(true);
-
-			entityWithoutEggList.invoke(entityWithoutEggList, CustomGiant.class, "Giant", 53);
-			entityWithoutEggList.invoke(entityWithoutEggList, EntityGiantZombie.class, "Giant", 53);
+			Class entityTypesClass = EntityTypes.class;
+			Field[] mapFields = new Field[5];
+			mapFields[0] = entityTypesClass.getDeclaredField("c");
+			mapFields[1] = entityTypesClass.getDeclaredField("d");
+			mapFields[2] = entityTypesClass.getDeclaredField("e");
+			mapFields[3] = entityTypesClass.getDeclaredField("f");
+			mapFields[4] = entityTypesClass.getDeclaredField("g");
+			HashMap[] maps = new HashMap[5];
+			for(int i = 0; i < 5; i++)
+			{
+				Field f = mapFields[i];
+				f.setAccessible(true);
+				maps[i] = (HashMap) f.get(EntityTypes.class);
+			}
+			return maps;
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static HashMap getEntityTypesEggHashMap()
+	{
+		try
+		{
+			Class entityTypesClass = EntityTypes.class;
+			Field mapField = entityTypesClass.getDeclaredField("a");
+			mapField.setAccessible(true);
+			return (HashMap) mapField.get(EntityTypes.class);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
 		}
 	}
     
