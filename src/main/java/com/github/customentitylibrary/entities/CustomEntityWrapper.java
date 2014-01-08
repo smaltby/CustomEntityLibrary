@@ -340,7 +340,7 @@ public class CustomEntityWrapper
 				entity = new EntityOcelot(nmsWorld);
 				break;
 			case PIG_ZOMBIE:
-				entity = new CustomPigZombie(nmsWorld);
+				entity = new CustomPigZombie(nmsWorld, true);
 				break;
 			case SKELETON:
 				entity = new EntitySkeleton(nmsWorld);

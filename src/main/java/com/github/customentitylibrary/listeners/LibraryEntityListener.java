@@ -94,7 +94,7 @@ public class LibraryEntityListener implements Listener
 		else if(damager instanceof Projectile)
 		{
 			Projectile proj = (Projectile) damager;
-			if(proj.getShooter() != null && CustomEntityWrapper.instanceOf(proj.getShooter()))
+			if(proj.getShooter() != null && CustomEntityWrapper.instanceOf(proj.getShooter()) && event.getEntity() instanceof LivingEntity)
 			{
 				CustomEntityWrapper customEnt = CustomEntityWrapper.getCustomEntity(proj.getShooter());
 				LivingEntity ent = (LivingEntity) event.getEntity();

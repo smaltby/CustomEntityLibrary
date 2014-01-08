@@ -5,9 +5,17 @@ import net.minecraft.server.v1_7_R1.World;
 
 public class CustomPigZombie extends EntityPigZombie
 {
+	private boolean newAi;
+
 	public CustomPigZombie(World world)
 	{
+		this(world, false);
+	}
+
+	public CustomPigZombie(World world, boolean newAi)
+	{
 		super(world);
+		this.newAi = newAi;
 	}
 
 	/**
@@ -16,6 +24,6 @@ public class CustomPigZombie extends EntityPigZombie
 	@Override
 	protected boolean bk()
 	{
-		return true;
+		return newAi;
 	}
 }
